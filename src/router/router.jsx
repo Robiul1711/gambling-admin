@@ -1,19 +1,49 @@
 import Dashboard from "@/components/admin/Dashboard";
 import AdminLayout from "@/layout/AdminLayout";
-import Layout from "@/layout/Layout";
-import Home from "@/pages/sites/Home";
+import AuthLayout from "@/layout/AuthLayout";
+import PrivateRoute from "@/components/common/PrivateRoute";
+import ForgetPassword from "@/pages/authPages/ForgetPassword";
+import Login from "@/pages/authPages/Login";
+import Register from "@/pages/authPages/Register";
+import ResetPassword from "@/pages/authPages/ResetPassword";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
-
-  // Admin routes
+  // Auth routes (no sidebar/navbar)
   {
     path: "/",
-    element: <AdminLayout />,
+    element: <AuthLayout />,
     children: [
       {
+        path: "/login",
+        element: <Login />,
+      },
+      {
         path: "/",
-        element: <Dashboard />, // ✅ Fixed typo
+        element: <Register />,
+      },
+      {
+        path: "/forgot-password",
+        element: <ForgetPassword />,
+      },
+      {
+        path: "/reset-password",
+        element: <ResetPassword />,
+      },
+    ],
+  },
+  // Admin routes (protected by PrivateRoute)
+  {
+    path: "/dashboard",
+    element: (
+      <PrivateRoute>
+        <AdminLayout />
+      </PrivateRoute>
+    ),
+    children: [
+      {
+        path: "/dashboard",
+        element: <Dashboard />,
       },
     ],
   },
