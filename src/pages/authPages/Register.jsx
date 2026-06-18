@@ -264,7 +264,7 @@ const Register = () => {
       <p className="mt-8 text-center text-sm text-gray-500 font-[family-name:var(--font-poppins)]">
         Already have an account?{" "}
         <Link
-          to="/login"
+          to="/"
           className="font-medium text-[#156E94] hover:text-[#0F4A63] transition-colors"
         >
           Sign In
