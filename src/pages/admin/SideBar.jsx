@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import { IoLogOutOutline } from "react-icons/io5";
-import { FaReact } from "react-icons/fa6";
+import logo from "@/assets/images/logo.png";
+import useClient from "@/hooks/useClient";
 import { useDispatch, useSelector } from "react-redux";
 import { clearAuth } from "@/redux/slices/authSlice";
 import { toast } from "react-toastify";
@@ -21,6 +22,13 @@ const SideBar = ({ sidebar, open, setOpen }) => {
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.ui);
   const [activeParentIndex, setActiveParentIndex] = useState(null);
+
+  // Fetch brand logo dynamically from footer settings
+  const { data: responseData } = useClient({
+    queryKey: ["footerSettings"],
+    url: "/footer",
+  });
+  const footerData = responseData?.data;
 
   useEffect(() => {
     sidebar.forEach((item, index) => {
@@ -56,7 +64,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
       position: "top-right",
       autoClose: 2000,
     });
-    navigate("/login");
+    navigate("/");
   };
 
   return (
@@ -84,8 +92,8 @@ const SideBar = ({ sidebar, open, setOpen }) => {
           {/* Logo Area */}
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
             <Link to="/dashboard" className="flex items-center gap-3 group">
-              <div className="flex items-center justify-center w-10 h-10 bg-white/15 rounded-xl group-hover:bg-white/25 transition-all duration-200 shadow-lg">
-                <FaReact size={22} className="text-white" />
+              <div className="flex items-center justify-center w-10 h-10 bg-white/15 rounded-xl group-hover:bg-white/25 transition-all duration-200 shadow-lg overflow-hidden p-1.5">
+                <img src={footerData?.logo || logo} alt="logo" className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col">
                 <span className="text-white font-semibold text-lg leading-tight tracking-tight">
@@ -190,9 +198,17 @@ const SideBar = ({ sidebar, open, setOpen }) => {
             <div className="h-px bg-gradient-to-r from-white/0 via-white/20 to-white/0 mb-4" />
             <div className="flex items-center justify-between px-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white font-semibold text-sm shadow-inner">
-                  {user?.name ? user.name[0].toUpperCase() : "A"}
-                </div>
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user?.name || "Admin"}
+                    className="w-9 h-9 rounded-full object-cover shadow-inner"
+                  />
+                ) : (
+                  <div className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white font-semibold text-sm shadow-inner">
+                    {user?.name ? user.name[0].toUpperCase() : "A"}
+                  </div>
+                )}
                 <div className="flex flex-col">
                   <span className="text-white text-sm font-medium leading-tight">
                     {user?.name || "Admin"}
@@ -205,7 +221,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
               <button
                 onClick={handleLogout}
                 className="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-all duration-200"
-                title="Logout"
+                title=""
               >
                 <IoLogOutOutline size={18} />
               </button>

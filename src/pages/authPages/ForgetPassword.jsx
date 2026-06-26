@@ -23,7 +23,7 @@ const ForgetPassword = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      await axiosPublic.post("/api/auth/forgot-password", {
+      await axiosPublic.post("/auth/forgot-password", {
         email: data.email,
       });
 

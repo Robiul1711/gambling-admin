@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -10,9 +10,25 @@ import { setToken } from "@/redux/slices/authSlice";
 const Register = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [checkingStatus, setCheckingStatus] = useState(true);
+  const [registrationAvailable, setRegistrationAvailable] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosPublic = useAxiosPublic();
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const response = await axiosPublic.get("/auth/register-status");
+        setRegistrationAvailable(response.data.registrationAvailable);
+      } catch (error) {
+        console.error("Failed to check registration status:", error);
+      } finally {
+        setCheckingStatus(false);
+      }
+    };
+    checkStatus();
+  }, [axiosPublic]);
 
   const {
     register,
@@ -32,7 +48,7 @@ const Register = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axiosPublic.post("/api/auth/register", {
+      const response = await axiosPublic.post("/auth/register", {
         name: data.name,
         email: data.email,
         password: data.password,
@@ -49,7 +65,7 @@ const Register = () => {
       navigate("/dashboard");
     } catch (error) {
       const message =
-        error.response?.data?.message || "Something went wrong. Please try again.";
+          error.response?.data?.message || "Something went wrong. Please try again.";
       toast.error(message, {
         position: "top-right",
         autoClose: 4000,
@@ -75,6 +91,40 @@ const Register = () => {
   };
 
   const strength = passwordStrength(password);
+
+  if (checkingStatus) {
+    return (
+      <div className="flex flex-col items-center justify-center py-12">
+        <svg className="animate-spin h-8 w-8 text-[#156E94]" viewBox="0 0 24 24">
+          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+        </svg>
+        <p className="text-gray-500 mt-4 font-medium font-[family-name:var(--font-poppins)]">Checking status...</p>
+      </div>
+    );
+  }
+
+  if (!registrationAvailable) {
+    return (
+      <div className="text-center py-8">
+        <div className="inline-flex items-center justify-center w-16 h-16 bg-red-100 rounded-full mb-6 text-red-600 shadow-sm animate-pulse">
+          <FiLock className="w-8 h-8" />
+        </div>
+        <h2 className="text-2xl font-bold text-gray-900 mb-3 font-[family-name:var(--font-poppins)]">
+          Registration Disabled
+        </h2>
+        <p className="text-gray-600 max-w-sm mx-auto mb-8 font-[family-name:var(--font-poppins)] leading-relaxed">
+          An administrator account already exists. Multiple registrations are restricted for security reasons.
+        </p>
+        <Link
+          to="/"
+          className="inline-flex items-center justify-center w-full bg-gradient-to-r from-[#156E94] to-[#0F4A63] text-white py-2.5 rounded-lg font-semibold text-sm transition-all duration-200 hover:shadow-lg hover:shadow-[#156E94]/25 hover:from-[#0F4A63] hover:to-[#156E94] font-[family-name:var(--font-poppins)]"
+        >
+          Go to Sign In
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div>

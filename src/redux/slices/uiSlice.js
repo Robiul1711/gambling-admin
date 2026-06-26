@@ -15,8 +15,7 @@ const uiSlice = createSlice({
       state.resetToken = action.payload;
     },
     setUser: (state, action) => {
-      const { user } = action.payload;
-      state.user = user;
+      state.user = action.payload;
     },
     setApiError: (state, action) => {
       state.apiError = action.payload;
@@ -25,9 +24,12 @@ const uiSlice = createSlice({
       state.resetToken = null;
       state.apiError = null;
     },
+    clearUser: (state) => {
+      state.user = null;
+    },
   },
 });
 
-export const { setResetToken, setApiError, clearUiState, setUser } = uiSlice.actions;
+export const { setResetToken, setApiError, clearUiState, setUser, clearUser } = uiSlice.actions;
 
 export default uiSlice.reducer;
