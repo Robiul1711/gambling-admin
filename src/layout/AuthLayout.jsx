@@ -2,8 +2,17 @@ import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { FaReact } from "react-icons/fa6";
 import "react-toastify/dist/ReactToastify.css";
-import logo from "@/assets/images/logo.png"
+import logo from "@/assets/images/logo.png";
+import useClient from "@/hooks/useClient";
+
 const AuthLayout = () => {
+  const { data: responseData } = useClient({
+    queryKey: ["footerSettings"],
+    url: "/footer",
+  });
+
+  const footerData = responseData?.data;
+
   return (
     <div className="min-h-screen w-full flex">
       {/* Left side - decorative / brand panel */}
@@ -15,8 +24,7 @@ const AuthLayout = () => {
         </div>
         <div className="relative z-10 text-center px-12">
           <div className="flex items-center justify-center mb-4">
-
-      <img src={logo} alt="" />
+            <img src={footerData?.logo || logo} alt="logo" className="max-w-[150px] object-contain" />
           </div>
           <h1 className="text-4xl font-bold text-white mb-4 font-[family-name:var(--font-poppins)]">
             Admin Dashboard  

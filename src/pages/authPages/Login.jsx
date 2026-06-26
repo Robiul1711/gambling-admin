@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
@@ -10,9 +10,22 @@ import { setToken } from "@/redux/slices/authSlice";
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [registrationAvailable, setRegistrationAvailable] = useState(true);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const axiosPublic = useAxiosPublic();
+
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const response = await axiosPublic.get("/auth/register-status");
+        setRegistrationAvailable(response.data.registrationAvailable);
+      } catch (error) {
+        console.error("Failed to check registration status:", error);
+      }
+    };
+    checkStatus();
+  }, [axiosPublic]);
 
   const {
     register,
@@ -28,7 +41,7 @@ const Login = () => {
   const onSubmit = async (data) => {
     setIsLoading(true);
     try {
-      const response = await axiosPublic.post("/api/auth/login", {
+      const response = await axiosPublic.post("/auth/login", {
         email: data.email,
         password: data.password,
       });
@@ -200,15 +213,17 @@ const Login = () => {
       </form>
 
       {/* Register link */}
-      <p className="mt-8 text-center text-sm text-gray-500 font-[family-name:var(--font-poppins)]">
-        Don&apos;t have an account?{" "}
-        <Link
-          to="/register"
-          className="font-medium text-[#156E94] hover:text-[#0F4A63] transition-colors"
-        >
-          Create Account
-        </Link>
-      </p>
+      {registrationAvailable && (
+        <p className="mt-8 text-center text-sm text-gray-500 font-[family-name:var(--font-poppins)]">
+          Don&apos;t have an account?{" "}
+          <Link
+            to="/register"
+            className="font-medium text-[#156E94] hover:text-[#0F4A63] transition-colors"
+          >
+            Create Account
+          </Link>
+        </p>
+      )}
     </div>
   );
 };

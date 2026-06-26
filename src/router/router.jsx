@@ -6,6 +6,12 @@ import ForgetPassword from "@/pages/authPages/ForgetPassword";
 import Login from "@/pages/authPages/Login";
 import Register from "@/pages/authPages/Register";
 import ResetPassword from "@/pages/authPages/ResetPassword";
+import HeroBannerManager from "@/pages/admin/HeroBannerManager";
+import SettingsPage from "@/pages/admin/SettingsPage";
+import OurTeamManager from "@/pages/admin/OurTeamManager";
+import ResourceManager from "@/pages/admin/ResourceManager";
+import AboutPageManager from "@/pages/admin/AboutPageManager";
+import FooterManager from "@/pages/admin/FooterManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -14,22 +20,10 @@ const router = createBrowserRouter([
     path: "/",
     element: <AuthLayout />,
     children: [
-      {
-        path: "/",
-        element: <Login />,
-      },
-      {
-        path: "/register",
-        element: <Register />,
-      },
-      {
-        path: "/forgot-password",
-        element: <ForgetPassword />,
-      },
-      {
-        path: "/reset-password",
-        element: <ResetPassword />,
-      },
+      { path: "/", element: <Login /> },
+      { path: "/register", element: <Register /> },
+      { path: "/forgot-password", element: <ForgetPassword /> },
+      { path: "/reset-password", element: <ResetPassword /> },
     ],
   },
   // Admin routes (protected by PrivateRoute)
@@ -41,10 +35,13 @@ const router = createBrowserRouter([
       </PrivateRoute>
     ),
     children: [
-      {
-        path: "/dashboard",
-        element: <Dashboard />,
-      },
+      { path: "/dashboard", element: <Dashboard /> },
+      { path: "/dashboard/home/banner", element: <HeroBannerManager /> },
+      { path: "/dashboard/settings", element: <SettingsPage /> },
+      { path: "/dashboard/team", element: <OurTeamManager /> },
+      { path: "/dashboard/resources", element: <ResourceManager /> },
+      { path: "/dashboard/about", element: <AboutPageManager /> },
+      { path: "/dashboard/footer", element: <FooterManager /> },
     ],
   },
 ]);
