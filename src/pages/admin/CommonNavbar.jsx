@@ -98,7 +98,7 @@ const CommonNavbar = ({ open, setOpen }) => {
       <div className="relative" ref={profileRef}>
         <button
           onClick={() => setShowProfileMenu(!showProfileMenu)}
-          className="flex items-center gap-2.5 pl-1.5 pr-3 py-1.5 rounded-xl bg-white border border-gray-200 hover:border-[#156E94]/30 hover:bg-[#156E94]/5 transition-all duration-200 shadow-sm group"
+          className="flex items-center gap-2.5 pl-1.5 pr-3 py-1 rounded-lg bg-white border border-gray-200 hover:border-[#156E94]/30 hover:bg-[#156E94]/5 transition-all duration-200  group"
         >
           {/* Avatar */}
           <div className="w-9 h-9 rounded-lg overflow-hidden flex-shrink-0 shadow-inner">

@@ -12,6 +12,8 @@ import OurTeamManager from "@/pages/admin/OurTeamManager";
 import ResourceManager from "@/pages/admin/ResourceManager";
 import AboutPageManager from "@/pages/admin/AboutPageManager";
 import FooterManager from "@/pages/admin/FooterManager";
+import NewsResearchSettingsManager from "@/pages/admin/NewsResearchSettingsManager";
+import PhoenixAudioManager from "@/pages/admin/PhoenixAudioManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -42,6 +44,8 @@ const router = createBrowserRouter([
       { path: "/dashboard/resources", element: <ResourceManager /> },
       { path: "/dashboard/about", element: <AboutPageManager /> },
       { path: "/dashboard/footer", element: <FooterManager /> },
+      { path: "/dashboard/news-research/settings", element: <NewsResearchSettingsManager /> },
+      { path: "/dashboard/news-research/audio", element: <PhoenixAudioManager /> },
     ],
   },
 ]);

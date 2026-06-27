@@ -232,3 +232,30 @@
 .bg-custom {
   background: var(--color-bg-custom);
 }
+
+/* Custom Scrollbar Styles (Thin & Color Modified) */
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #156e94 #f1f5f9; /* thumb, track */
+}
+
+/* Chrome, Safari, and Opera */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #156e94;
+  border-radius: 10px;
+  border: 1px solid #f1f5f9;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #0d4a63;
+}

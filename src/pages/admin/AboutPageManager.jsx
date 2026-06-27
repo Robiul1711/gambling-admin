@@ -169,7 +169,7 @@ const AboutPageManager = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 text-slate-800 max-w-4xl">
+    <div className="w-full mx-auto  text-slate-800 max-w-6xl">
       {/* Header */}
       <div className="mb-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
