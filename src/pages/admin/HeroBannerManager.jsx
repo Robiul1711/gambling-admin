@@ -139,7 +139,7 @@ const HeroBannerManager = () => {
   }
 
   return (
-    <div className=" mx-auto  text-slate-800 max-w-6xl">
+    <div className=" w-full  text-slate-800 ">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">

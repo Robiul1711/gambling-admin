@@ -205,7 +205,7 @@ const PhoenixAudioManager = () => {
   const isPending = createMutation.isPending || updateMutation.isPending;
 
   return (
-    <div className="mx-auto text-slate-800 max-w-6xl w-full">
+    <div className="mx-auto text-slate-800 w-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>

@@ -21,7 +21,8 @@ const SideBar = ({ sidebar, open, setOpen }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { user } = useSelector((state) => state.ui);
-  const [activeParentIndex, setActiveParentIndex] = useState(null);
+  const [isCMSOpen, setIsCMSOpen] = useState(false);
+  const [openSubpages, setOpenSubpages] = useState({});
 
   // Fetch brand logo dynamically from footer settings
   const { data: responseData } = useClient({
@@ -31,16 +32,31 @@ const SideBar = ({ sidebar, open, setOpen }) => {
   const footerData = responseData?.data;
 
   useEffect(() => {
-    sidebar.forEach((item, index) => {
-      if (item.sublink) {
-        const activeSub = item.sublink.find(
-          (sub) => sub.path === location.pathname
-        );
-        if (activeSub) {
-          setActiveParentIndex(index);
-        }
+    let cmsMatched = false;
+    const initialOpenSubpages = {};
+
+    sidebar.forEach((item) => {
+      if (item.isCMSParent && item.subpages) {
+        item.subpages.forEach((subpage) => {
+          if (subpage.sections) {
+            const activeSection = subpage.sections.find(
+              (sec) => sec.path === location.pathname
+            );
+            if (activeSection) {
+              initialOpenSubpages[subpage.id] = true;
+              cmsMatched = true;
+            }
+          } else if (subpage.path === location.pathname) {
+            cmsMatched = true;
+          }
+        });
       }
     });
+
+    if (cmsMatched) {
+      setIsCMSOpen(true);
+      setOpenSubpages((prev) => ({ ...prev, ...initialOpenSubpages }));
+    }
   }, [location.pathname, sidebar]);
 
   const isActive = (paths) => {
@@ -49,13 +65,28 @@ const SideBar = ({ sidebar, open, setOpen }) => {
     return pathArray.includes(location.pathname);
   };
 
-  const isParentActive = (item) => {
-    if (!item.sublink) return isActive(item.activePaths || item.path);
-    return item.sublink.some((sub) => isActive(sub.path));
+  const isCMSActive = (item) => {
+    if (!item.subpages) return false;
+    return item.subpages.some((subpage) => {
+      if (subpage.sections) {
+        return subpage.sections.some((sec) => isActive(sec.path));
+      }
+      return isActive(subpage.path);
+    });
   };
 
-  const toggleSubmenu = (index) => {
-    setActiveParentIndex((prev) => (prev === index ? null : index));
+  const isSubpageActive = (subpage) => {
+    if (subpage.sections) {
+      return subpage.sections.some((sec) => isActive(sec.path));
+    }
+    return isActive(subpage.path);
+  };
+
+  const toggleSubpage = (subpageId) => {
+    setOpenSubpages((prev) => ({
+      ...prev,
+      [subpageId]: !prev[subpageId],
+    }));
   };
 
   const handleLogout = () => {
@@ -82,7 +113,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         className={`h-full flex flex-col bg-gradient-to-b from-[#0F4A63] via-[#156E94] to-[#0D3B4F] transition-all duration-300 ease-in-out ${
           open
             ? "left-0 top-0 w-[300px] z-50 shadow-2xl shadow-black/20"
-            : "-left-full xl:w-[280px] w-[300px]"
+            : "-left-full xl:w-[330px] w-[300px]"
         } xl:static fixed overflow-hidden`}
       >
         {/* Decorative gradient overlay */}
@@ -117,21 +148,121 @@ const SideBar = ({ sidebar, open, setOpen }) => {
             </p>
 
             {sidebar?.map((item, index) => {
-              const parentActive = isParentActive(item);
-              const isActuallyActive = isActive(item?.activePaths || item?.path);
+              if (item.isCMSParent) {
+                const parentActive = isCMSActive(item);
+                return (
+                  <div key={index} className="space-y-1">
+                    {/* CMS Parent Button */}
+                    <button
+                      onClick={() => setIsCMSOpen((v) => !v)}
+                      className={`w-full ${navItemStyles.base} ${
+                        parentActive ? navItemStyles.active : navItemStyles.inactive
+                      }`}
+                    >
+                      <span className="text-lg flex-shrink-0">{item.icon}</span>
+                      <span className="truncate flex-1 text-left">{item.text}</span>
+                      <MdKeyboardArrowDown
+                        size={18}
+                        className={`transition-transform duration-300 flex-shrink-0 ${
+                          isCMSOpen ? "rotate-180" : ""
+                        }`}
+                      />
+                    </button>
 
-              return !item?.sublink ? (
+                    {/* Level 2 Subpages List */}
+                    <div
+                      className={`transition-all duration-300 ease-in-out overflow-hidden ${
+                        isCMSOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+                      }`}
+                    >
+                      <div className="ml-4 pl-3 border-l border-white/10 space-y-1.5 py-1">
+                        {item.subpages?.map((subpage, subIndex) => {
+                          const subpageActive = isSubpageActive(subpage);
+                          const hasSections = !!subpage.sections;
+
+                          if (hasSections) {
+                            const isSubpageOpen = !!openSubpages[subpage.id];
+                            return (
+                              <div key={subpage.id || subIndex} className="space-y-1">
+                                {/* Level 2 Page Toggle Button */}
+                                <button
+                                  onClick={() => toggleSubpage(subpage.id)}
+                                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                                    subpageActive
+                                      ? "text-white font-medium bg-white/5"
+                                      : "text-white/60 hover:text-white hover:bg-white/5"
+                                  }`}
+                                >
+                                  <span className="truncate">{subpage.text}</span>
+                                  <MdKeyboardArrowDown
+                                    size={16}
+                                    className={`transition-transform duration-300 flex-shrink-0 ${
+                                      isSubpageOpen ? "rotate-180" : ""
+                                    }`}
+                                  />
+                                </button>
+
+                                {/* Level 3 Sections List */}
+                                <div
+                                  className={`transition-all duration-200 ease-in-out overflow-hidden ${
+                                    isSubpageOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                                  }`}
+                                >
+                                  <div className="ml-3 pl-3 border-l border-white/10 space-y-1 py-1">
+                                    {subpage.sections.map((sec, secIdx) => {
+                                      const secActive = isActive(sec.path);
+                                      return (
+                                        <Link
+                                          key={secIdx}
+                                          to={sec.path}
+                                          onClick={() => setOpen(false)}
+                                          className={`block px-3 py-1.5 rounded-md text-xs transition-all duration-200 ${
+                                            secActive
+                                              ? "text-white font-semibold bg-white/10"
+                                              : "text-white/50 hover:text-white hover:bg-white/5"
+                                          }`}
+                                        >
+                                          {sec.text}
+                                        </Link>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            );
+                          } else {
+                            // Direct Level 2 Link (e.g. Footer Settings)
+                            return (
+                              <Link
+                                key={subpage.id || subIndex}
+                                to={subpage.path}
+                                onClick={() => setOpen(false)}
+                                className={`block px-3 py-2 rounded-lg text-sm transition-all duration-200 ${
+                                  isActive(subpage.path)
+                                    ? "text-white font-medium bg-white/10"
+                                    : "text-white/60 hover:text-white hover:bg-white/5"
+                                }`}
+                              >
+                                {subpage.text}
+                              </Link>
+                            );
+                          }
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // Standard Link (Our Team, Resources, Settings, etc.)
+              const isActuallyActive = isActive(item?.activePaths || item?.path);
+              return (
                 <Link
                   key={index}
                   to={item?.path}
-                  onClick={() => {
-                    setActiveParentIndex(null);
-                    setOpen(false);
-                  }}
+                  onClick={() => setOpen(false)}
                   className={`${navItemStyles.base} ${
-                    isActuallyActive
-                      ? navItemStyles.active
-                      : navItemStyles.inactive
+                    isActuallyActive ? navItemStyles.active : navItemStyles.inactive
                   }`}
                 >
                   <span className="text-lg flex-shrink-0">{item?.icon}</span>
@@ -140,55 +271,6 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                     <span className="ml-auto w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
                   )}
                 </Link>
-              ) : (
-                <div key={index} className="space-y-1">
-                  {/* Parent link */}
-                  <button
-                    onClick={() => toggleSubmenu(index)}
-                    className={`w-full ${navItemStyles.base} ${
-                      parentActive
-                        ? navItemStyles.active
-                        : navItemStyles.inactive
-                    }`}
-                  >
-                    <span className="text-lg flex-shrink-0">{item?.icon}</span>
-                    <span className="truncate flex-1 text-left">
-                      {item?.text}
-                    </span>
-                    <MdKeyboardArrowDown
-                      size={18}
-                      className={`transition-transform duration-300 flex-shrink-0 ${
-                        activeParentIndex === index ? "rotate-180" : ""
-                      }`}
-                    />
-                  </button>
-
-                  {/* Sublinks */}
-                  <div
-                    className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                      activeParentIndex === index
-                        ? "max-h-96 opacity-100"
-                        : "max-h-0 opacity-0"
-                    }`}
-                  >
-                    <div className="ml-4 pl-3 border-l border-white/10 space-y-1 py-1">
-                      {item?.sublink?.map((value, subIndex) => (
-                        <Link
-                          key={subIndex}
-                          to={value?.path}
-                          onClick={() => setOpen(false)}
-                          className={`block px-4 py-2 rounded-lg text-sm transition-all duration-200 ${
-                            isActive(value?.path)
-                              ? "text-white bg-white/15 font-medium"
-                              : "text-white/60 hover:text-white hover:bg-white/5"
-                          }`}
-                        >
-                          {value?.text}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               );
             })}
           </div>
