@@ -263,7 +263,7 @@ const ResourceManager = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 text-slate-800 max-w-6xl">
+    <div className=" mx-auto w-full  text-slate-800 max-w-6xl">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>

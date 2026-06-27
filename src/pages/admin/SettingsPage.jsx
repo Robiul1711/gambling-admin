@@ -105,8 +105,8 @@ const SettingsPage = () => {
   const getInitial = () => (user?.name ? user.name.charAt(0).toUpperCase() : "A");
 
   return (
-    <div className="max-w-5xl mx-auto text-slate-800">
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-md overflow-hidden">
+    <div className="max-w-6xl mx-auto w-full text-slate-800">
+      <div className="bg-white  rounded-3xl border border-slate-200/80 shadow-md overflow-hidden">
         {/* Cover Banner with geometric elements */}
         <div className="relative h-48 w-full bg-gradient-to-r from-[#156E94] via-[#105674] to-[#0D3B4F] flex items-end">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(255,255,255,0.08),transparent)]" />

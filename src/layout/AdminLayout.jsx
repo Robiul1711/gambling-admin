@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiSettings } from "react-icons/fi";
-import { FaUsers, FaFileAlt, FaBookOpen, FaAlignLeft } from "react-icons/fa";
+import { FaUsers, FaFileAlt, FaBookOpen, FaAlignLeft, FaRegNewspaper } from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
   useUserProfile();
@@ -45,6 +45,24 @@ const AdminLayout = () => {
       path: "/dashboard/resources",
     },
     {
+      id: 7,
+      icon: <FaRegNewspaper />,
+      text: "News & Research",
+      path: "/dashboard/news-research",
+      sublink: [
+        {
+          id: 1,
+          text: "Page Settings",
+          path: "/dashboard/news-research/settings",
+        },
+        {
+          id: 2,
+          text: "Audio Clips",
+          path: "/dashboard/news-research/audio",
+        },
+      ],
+    },
+    {
       id: 5,
       icon: <FaBookOpen />,
       text: "About Page Settings",
@@ -77,7 +95,7 @@ const AdminLayout = () => {
         <SideBar open={Open} setOpen={setOpen} sidebar={sideBar} />
         <div className="flex-1 bg-slate-50 text-slate-800 flex flex-col overflow-auto custom-scrollbar">
           {/* Sticky header container */}
-          <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 lg:px-[30px] px-2.5 sm:px-5 py-4 shadow-sm">
+          <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-xl border-b border-slate-200/60 lg:px-[30px] px-2.5 sm:px-5 py-3 shadow-sm">
             <CommonNavbar open={Open} setOpen={setOpen} />
           </div>
           {/* Content container */}

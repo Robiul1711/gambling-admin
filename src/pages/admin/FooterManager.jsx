@@ -130,7 +130,7 @@ const FooterManager = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 text-slate-800 max-w-4xl">
+    <div className="w-full mx-auto  text-slate-800 max-w-6xl">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">

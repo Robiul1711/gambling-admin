@@ -139,7 +139,7 @@ const HeroBannerManager = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 text-slate-800 max-w-6xl">
+    <div className=" mx-auto  text-slate-800 max-w-6xl">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
@@ -307,54 +307,19 @@ const HeroBannerManager = () => {
             </div>
           </div>
 
-          {/* Stat Badge */}
+          {/* Image Caption Settings */}
           <div className="bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
             <h2 className="text-xl font-bold text-slate-950 mb-6 flex items-center gap-2">
               <span className="w-2 h-6 bg-emerald-500 rounded-full" />
-              Overlay Stat Badge
+              Image Caption Settings
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Stat Title / Metric
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. ~1 In 5"
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-sky-500 transition shadow-sm"
-                  {...register("statTitle")}
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">
-                  Stat Link Text
-                </label>
-                <input
-                  type="text"
-                  placeholder="e.g. Read the burden of harm"
-                  className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-sky-500 transition shadow-sm"
-                  {...register("statLinkText")}
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Stat Link Target URL
-              </label>
-              <input
-                type="text"
-                placeholder="e.g. #burden-of-harm"
-                className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-sky-500 transition shadow-sm"
-                {...register("statLinkUrl")}
-              />
-            </div>
             <div>
               <label className="block text-sm font-semibold text-slate-700 mb-2">
-                Stat Description
+                Image Caption
               </label>
               <textarea
                 rows={3}
-                placeholder="Enter content details for the stat overlay card..."
+                placeholder="Enter caption text to display beneath the banner photo..."
                 className="w-full bg-white border border-slate-200 rounded-xl px-4 py-3 text-slate-800 focus:outline-none focus:border-sky-500 transition resize-y shadow-sm"
                 {...register("statDescription")}
               />
