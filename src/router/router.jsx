@@ -14,6 +14,13 @@ import AboutPageManager from "@/pages/admin/AboutPageManager";
 import FooterManager from "@/pages/admin/FooterManager";
 import NewsResearchSettingsManager from "@/pages/admin/NewsResearchSettingsManager";
 import PhoenixAudioManager from "@/pages/admin/PhoenixAudioManager";
+import ProfessionalsManager from "@/pages/admin/ProfessionalsManager";
+import HealthcareBannerManager from "@/pages/admin/HealthcareBannerManager";
+import HealthcarePositionVideoManager from "@/pages/admin/HealthcarePositionVideoManager";
+import PublicHealthBannerManager from "@/pages/admin/PublicHealthBannerManager";
+import PublicHealthPositionManager from "@/pages/admin/PublicHealthPositionManager";
+import CYPBannerManager from "@/pages/admin/CYPBannerManager";
+import CYPIntroManager from "@/pages/admin/CYPIntroManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -43,9 +50,22 @@ const router = createBrowserRouter([
       { path: "/dashboard/team", element: <OurTeamManager /> },
       { path: "/dashboard/resources", element: <ResourceManager /> },
       { path: "/dashboard/about", element: <AboutPageManager /> },
+      { path: "/dashboard/professionals/stakeholder", element: <ProfessionalsManager /> },
+      { path: "/dashboard/healthcare/banner", element: <HealthcareBannerManager /> },
+      { path: "/dashboard/healthcare/position-video", element: <HealthcarePositionVideoManager /> },
+      { path: "/dashboard/public-health/banner", element: <PublicHealthBannerManager /> },
+      { path: "/dashboard/public-health/position", element: <PublicHealthPositionManager /> },
+      { path: "/dashboard/cyp/banner", element: <CYPBannerManager /> },
+      { path: "/dashboard/cyp/intro", element: <CYPIntroManager /> },
       { path: "/dashboard/footer", element: <FooterManager /> },
-      { path: "/dashboard/news-research/settings", element: <NewsResearchSettingsManager /> },
-      { path: "/dashboard/news-research/audio", element: <PhoenixAudioManager /> },
+      {
+        path: "/dashboard/news-research/settings",
+        element: <NewsResearchSettingsManager />,
+      },
+      {
+        path: "/dashboard/news-research/audio",
+        element: <PhoenixAudioManager />,
+      },
     ],
   },
 ]);

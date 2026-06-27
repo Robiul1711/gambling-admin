@@ -225,7 +225,7 @@ const OurTeamManager = () => {
   }
 
   return (
-    <div className=" mx-auto  text-slate-800 max-w-6xl">
+    <div className=" mx-auto  text-slate-800 w-full">
       {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <div>
@@ -256,7 +256,7 @@ const OurTeamManager = () => {
           </p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {teamMembers.map((member) => (
             <div
               key={member._id}

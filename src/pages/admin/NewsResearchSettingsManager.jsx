@@ -100,7 +100,7 @@ const NewsResearchSettingsManager = () => {
   }
 
   return (
-    <div className="mx-auto text-slate-800 max-w-6xl w-full">
+    <div className="mx-auto text-slate-800 w-full">
       {/* Header */}
       <div className="mb-8">
         <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">

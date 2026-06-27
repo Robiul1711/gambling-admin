@@ -7,7 +7,13 @@ import React, { useEffect, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import { IoHomeOutline } from "react-icons/io5";
 import { FiSettings } from "react-icons/fi";
-import { FaUsers, FaFileAlt, FaBookOpen, FaAlignLeft, FaRegNewspaper } from "react-icons/fa";
+import {
+  FaUsers,
+  FaFileAlt,
+  FaBookOpen,
+  FaAlignLeft,
+  FaRegNewspaper,
+} from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
   useUserProfile();
@@ -15,20 +21,68 @@ const AdminLayout = () => {
 
   const sideBar = [
     {
-      id: 1,
-      icon: <IoHomeOutline />,
-      text: "Home Page",
-      path: "/dashboard/home",
-      sublink: [
+      id: 100,
+      icon: <FaAlignLeft />,
+      text: "CMS",
+      isCMSParent: true,
+      subpages: [
         {
-          id: 1,
-          text: "Hero Banner",
-          path: "/dashboard/home/banner",
+          id: "home",
+          text: "Home Page",
+          sections: [
+            { text: "Hero Banner", path: "/dashboard/home/banner" },
+          ],
         },
         {
-          id: 2,
-          text: "Our Position",
-          path: "/dashboard/home/our-position",
+          id: "about",
+          text: "About Page",
+          sections: [
+            { text: "About Settings", path: "/dashboard/about" },
+          ],
+        },
+        {
+          id: "news",
+          text: "News & Research",
+          sections: [
+            { text: "Page Settings", path: "/dashboard/news-research/settings" },
+            { text: "Audio Clips", path: "/dashboard/news-research/audio" },
+          ],
+        },
+        {
+          id: "professionals",
+          text: "Professionals Page",
+          sections: [
+            { text: "Stakeholders Section", path: "/dashboard/professionals/stakeholder" },
+          ],
+        },
+        {
+          id: "healthcare",
+          text: "Healthcare Page",
+          sections: [
+            { text: "Banner Section", path: "/dashboard/healthcare/banner" },
+            { text: "Position & Video", path: "/dashboard/healthcare/position-video" },
+          ],
+        },
+        {
+          id: "public-health",
+          text: "Public Health Page",
+          sections: [
+            { text: "Banner Section", path: "/dashboard/public-health/banner" },
+            { text: "Position Section", path: "/dashboard/public-health/position" },
+          ],
+        },
+        {
+          id: "cyp",
+          text: "Children & Young People Page",
+          sections: [
+            { text: "Banner Section", path: "/dashboard/cyp/banner" },
+            { text: "Intro Section", path: "/dashboard/cyp/intro" },
+          ],
+        },
+        {
+          id: "footer",
+          text: "Footer Settings",
+          path: "/dashboard/footer",
         },
       ],
     },
@@ -43,36 +97,6 @@ const AdminLayout = () => {
       icon: <FaFileAlt />,
       text: "Resources",
       path: "/dashboard/resources",
-    },
-    {
-      id: 7,
-      icon: <FaRegNewspaper />,
-      text: "News & Research",
-      path: "/dashboard/news-research",
-      sublink: [
-        {
-          id: 1,
-          text: "Page Settings",
-          path: "/dashboard/news-research/settings",
-        },
-        {
-          id: 2,
-          text: "Audio Clips",
-          path: "/dashboard/news-research/audio",
-        },
-      ],
-    },
-    {
-      id: 5,
-      icon: <FaBookOpen />,
-      text: "About Page Settings",
-      path: "/dashboard/about",
-    },
-    {
-      id: 6,
-      icon: <FaAlignLeft />,
-      text: "Footer Settings",
-      path: "/dashboard/footer",
     },
     {
       id: 2,
