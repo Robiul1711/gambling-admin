@@ -172,7 +172,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                     {/* Level 2 Subpages List */}
                     <div
                       className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isCMSOpen ? "max-h-[800px] opacity-100" : "max-h-0 opacity-0"
+                        isCMSOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
                       }`}
                     >
                       <div className="ml-4 pl-3 border-l border-white/10 space-y-1.5 py-1">
@@ -205,7 +205,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                                 {/* Level 3 Sections List */}
                                 <div
                                   className={`transition-all duration-200 ease-in-out overflow-hidden ${
-                                    isSubpageOpen ? "max-h-48 opacity-100" : "max-h-0 opacity-0"
+                                    isSubpageOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
                                   }`}
                                 >
                                   <div className="ml-3 pl-3 border-l border-white/10 space-y-1 py-1">
