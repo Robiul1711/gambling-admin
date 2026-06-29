@@ -11,6 +11,12 @@ import {
   FiEdit,
   FiExternalLink,
   FiLayers,
+  FiHelpCircle,
+  FiBriefcase,
+  FiGrid,
+  FiArrowRight,
+  FiInfo,
+  FiFileText,
 } from "react-icons/fi";
 
 const Dashboard = () => {
@@ -54,8 +60,72 @@ const Dashboard = () => {
   // Latest 5 publications
   const recentBlogs = blogs.slice(0, 5);
 
+  const cmsGroups = [
+    {
+      title: "Core Pages & Footer",
+      subtitle: "Manage homepage settings, footer brand files, and news/research settings.",
+      icon: <FiInfo className="text-[#156E94]" size={20} />,
+      colorClass: "border-l-[#156E94]",
+      links: [
+        { text: "Edit Home Banner", path: "/dashboard/home/banner" },
+        { text: "Edit About Settings", path: "/dashboard/about" },
+        { text: "Edit Our Mission Settings", path: "/dashboard/about/mission" },
+        { text: "Manage Footer & Brand Info", path: "/dashboard/footer" },
+      ],
+    },
+    {
+      title: "Audience Pages & Teams",
+      subtitle: "Manage resources for medical, child protection, and public health partners.",
+      icon: <FiUsers className="text-[#0092D0]" size={20} />,
+      colorClass: "border-l-[#0092D0]",
+      links: [
+        { text: "Professionals Hub", path: "/dashboard/professionals/stakeholder" },
+        { text: "Healthcare Banner", path: "/dashboard/healthcare/banner" },
+        { text: "Healthcare Position & Video", path: "/dashboard/healthcare/position-video" },
+        { text: "Public Health Banner", path: "/dashboard/public-health/banner" },
+        { text: "Public Health Position Section", path: "/dashboard/public-health/position" },
+        { text: "Children & Young People Banner", path: "/dashboard/cyp/banner" },
+        { text: "Children & Young People Intro", path: "/dashboard/cyp/intro" },
+        { text: "Children & Young People Films", path: "/dashboard/cyp/safeguarding-films" },
+      ],
+    },
+    {
+      title: "Get Help Pages",
+      subtitle: "Configure help banners, clinical treatments, and scale of harm metrics.",
+      icon: <FiHelpCircle className="text-[#C92525]" size={20} />,
+      colorClass: "border-l-[#C92525]",
+      links: [
+        { text: "Overview Banner", path: "/dashboard/get-help/overview" },
+        { text: "Check-In Banner", path: "/dashboard/get-help/check-in" },
+        { text: "Treatment Banner", path: "/dashboard/get-help/treatment" },
+        { text: "Family & Friends Banner", path: "/dashboard/get-help/family-friends" },
+        { text: "What Harm Looks Like", path: "/dashboard/get-help/what-harm" },
+        { text: "Victims Not Bystanders", path: "/dashboard/get-help/victims-not-bystanders" },
+        { text: "Scale Section settings", path: "/dashboard/get-help/scale-section" },
+      ],
+    },
+    {
+      title: "Our Work & Campaigns",
+      subtitle: "Configure research findings, self-exclusion advocacy, and campaign sites.",
+      icon: <FiBriefcase className="text-[#0F4A63]" size={20} />,
+      colorClass: "border-l-[#0F4A63]",
+      links: [
+        { text: "Burden of Harm Banner", path: "/dashboard/our-work/burden-of-harm" },
+        { text: "Modifiable Risk Factors", path: "/dashboard/our-work/modifiable-risk-factor" },
+        { text: "Gambling Explained Banner", path: "/dashboard/our-work/gambling-explained" },
+        { text: "Gambling Tactics Banner", path: "/dashboard/our-work/gambling-tactics" },
+        { text: "Understanding Harms Banner", path: "/dashboard/our-work/understanding-harms" },
+        { text: "What Harm Looks Like (Video)", path: "/dashboard/our-work/looks-like" },
+        { text: "Stigma & Language Settings", path: "/dashboard/our-work/stigma" },
+        { text: "Inequality Banner Details", path: "/dashboard/our-work/inequality" },
+        { text: "Policy & Advocacy Banner", path: "/dashboard/our-work/policy" },
+        { text: "Members Only Banner Details", path: "/dashboard/our-work/members-only" },
+      ],
+    },
+  ];
+
   return (
-    <div className="space-y-8 animate-fade-in">
+    <div className="space-y-8 animate-fade-in pb-10">
       {/* 1. WELCOME BANNER */}
       <div className="relative overflow-hidden bg-gradient-to-r from-[#0F4A63] via-[#156E94] to-[#0D3B4F] rounded-3xl p-6 sm:p-8 text-white shadow-lg">
         {/* Abstract background graphics */}
@@ -67,12 +137,12 @@ const Dashboard = () => {
               Hello, {user?.name || "Admin"}!
             </h1>
             <p className="text-white/80 text-sm sm:text-base mt-2 max-w-xl font-normal leading-relaxed">
-              Welcome to the Gambling Harm UK (GHUK) management platform. Monitor website statistics, publish new resources, and manage live site sections.
+              Welcome to the site command center. Directly navigate to any CMS section below or manage global resources.
             </p>
           </div>
-          <div className="flex-shrink-0">
+          <div className="flex-shrink-0 flex gap-3">
             <a
-              href="http://localhost:5173"
+              href="https://gambling-backend.vercel.app"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm px-5 py-3 rounded-2xl border border-white/20 transition-all shadow-md group"
@@ -140,11 +210,47 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* 3. TWO-COLUMN LAYOUT */}
+      {/* 3. CMS DIRECTORY MAP */}
+      <div className="space-y-5">
+        <h2 className="text-lg font-extrabold text-slate-800 flex items-center gap-2">
+          <FiGrid size={18} className="text-[#156E94]" />
+          CMS Section Directory
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {cmsGroups.map((group, idx) => (
+            <div
+              key={idx}
+              className={`bg-white rounded-3xl border border-slate-200/80 border-l-4 ${group.colorClass} p-6 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
+            >
+              <div>
+                <div className="flex items-center gap-2 mb-2">
+                  {group.icon}
+                  <h3 className="font-extrabold text-slate-800 text-base">{group.title}</h3>
+                </div>
+                <p className="text-slate-400 text-xs mb-4 leading-relaxed">{group.subtitle}</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  {group.links.map((link, lIdx) => (
+                    <Link
+                      key={lIdx}
+                      to={link.path}
+                      className="group flex items-center justify-between px-3 py-2 rounded-xl bg-slate-50 border border-slate-100 hover:border-[#156e94]/30 hover:bg-[#156e94]/5 transition-all text-xs font-bold text-slate-700"
+                    >
+                      <span className="truncate">{link.text}</span>
+                      <FiArrowRight size={12} className="text-slate-400 group-hover:text-[#156e94] group-hover:translate-x-0.5 transition-all" />
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 4. TWO-COLUMN LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
         {/* Left Column: Recent Publications (8/12) */}
         <div className="lg:col-span-8 space-y-6">
-          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+          <div className="bg-white border border-slate-200/80 rounded-3xl shadow-sm overflow-hidden">
             <div className="px-6 py-5 border-b border-slate-100 flex items-center justify-between">
               <h2 className="text-base font-bold text-slate-800">Recent Publications</h2>
               <Link
@@ -215,10 +321,10 @@ const Dashboard = () => {
         {/* Right Column: Quick Actions & Distribution (4/12) */}
         <div className="lg:col-span-4 space-y-6">
           {/* Quick Actions */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-4">
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
             <h2 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-3 flex items-center gap-2">
               <FiLayers className="text-[#156e94]" />
-              Quick Actions
+              Global Settings
             </h2>
             <div className="grid grid-cols-1 gap-2.5">
               <Link
@@ -232,22 +338,22 @@ const Dashboard = () => {
                 <span className="text-xs text-slate-400 font-bold">&rarr;</span>
               </Link>
               <Link
-                to="/dashboard/home/banner"
+                to="/dashboard/news-research/settings"
                 className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-200 transition-all font-medium text-sm text-slate-700 group"
               >
                 <span className="flex items-center gap-2">
-                  <FiEdit className="text-[#156e94] group-hover:scale-110 transition-transform" />
-                  Edit Home Banner
+                  <FiFileText className="text-[#156e94] group-hover:scale-110 transition-transform" />
+                  Publications Settings
                 </span>
                 <span className="text-xs text-slate-400 font-bold">&rarr;</span>
               </Link>
               <Link
-                to="/dashboard/footer"
+                to="/dashboard/news-research/audio"
                 className="flex items-center justify-between p-3.5 rounded-xl border border-slate-100 bg-slate-50/50 hover:bg-slate-50 hover:border-slate-200 transition-all font-medium text-sm text-slate-700 group"
               >
-                <span className="flex items-center gap-2 text-slate-700">
-                  <FiEdit className="text-[#156e94] group-hover:scale-110 transition-transform" />
-                  Edit Footer Details
+                <span className="flex items-center gap-2">
+                  <FiMusic className="text-[#156e94] group-hover:scale-110 transition-transform" />
+                  Manage Audio Clips
                 </span>
                 <span className="text-xs text-slate-400 font-bold">&rarr;</span>
               </Link>
@@ -255,7 +361,7 @@ const Dashboard = () => {
           </div>
 
           {/* Category Distribution */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl p-6 shadow-sm space-y-4">
+          <div className="bg-white border border-slate-200/80 rounded-3xl p-6 shadow-sm space-y-4">
             <h2 className="text-base font-bold text-slate-800 border-b border-slate-100 pb-3">
               Resource Distribution
             </h2>
