@@ -38,6 +38,7 @@ const AdminLayout = () => {
           text: "About Page",
           sections: [
             { text: "About Settings", path: "/dashboard/about" },
+            { text: "Our Mission Settings", path: "/dashboard/about/mission" },
           ],
         },
         {
@@ -77,6 +78,36 @@ const AdminLayout = () => {
           sections: [
             { text: "Banner Section", path: "/dashboard/cyp/banner" },
             { text: "Intro Section", path: "/dashboard/cyp/intro" },
+            { text: "Safeguarding Films", path: "/dashboard/cyp/safeguarding-films" },
+          ],
+        },
+        {
+          id: "get-help",
+          text: "Get Help Pages",
+          sections: [
+            { text: "Overview Banner", path: "/dashboard/get-help/overview" },
+            { text: "Check-In Banner", path: "/dashboard/get-help/check-in" },
+            { text: "Treatment Banner", path: "/dashboard/get-help/treatment" },
+            { text: "Family & Friends Banner", path: "/dashboard/get-help/family-friends" },
+            { text: "What Harm Looks Like", path: "/dashboard/get-help/what-harm" },
+            { text: "Victims Not Bystanders", path: "/dashboard/get-help/victims-not-bystanders" },
+            { text: "Scale Section", path: "/dashboard/get-help/scale-section" },
+          ],
+        },
+        {
+          id: "our-work",
+          text: "Our Work Pages",
+          sections: [
+            { text: "Burden of Harm Banner", path: "/dashboard/our-work/burden-of-harm" },
+            { text: "Modifiable Risk Factor", path: "/dashboard/our-work/modifiable-risk-factor" },
+            { text: "Gambling Explained Banner", path: "/dashboard/our-work/gambling-explained" },
+            { text: "Gambling Tactics Banner", path: "/dashboard/our-work/gambling-tactics" },
+            { text: "Understanding Harms Banner", path: "/dashboard/our-work/understanding-harms" },
+            { text: "What Harm Looks Like", path: "/dashboard/our-work/looks-like" },
+            { text: "Stigma & Language", path: "/dashboard/our-work/stigma" },
+            { text: "Inequality Banner", path: "/dashboard/our-work/inequality" },
+            { text: "Policy & Advocacy Banner", path: "/dashboard/our-work/policy" },
+            { text: "Members Only Banner", path: "/dashboard/our-work/members-only" },
           ],
         },
         {
