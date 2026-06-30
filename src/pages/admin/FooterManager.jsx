@@ -43,6 +43,14 @@ const FooterManager = () => {
       facebookUrl: "",
       xUrl: "",
       copyrightText: "",
+      crisisHeaderShow: true,
+      crisisHeaderText: "",
+      crisisHeaderPhone: "",
+      crisisHeaderPhoneLink: "",
+      crisisHeaderBtnText: "",
+      crisisHeaderBtnLink: "",
+      crisisHeaderBgColor: "#C92525",
+      crisisHeaderTextColor: "#ffffff",
     },
   });
 
@@ -55,6 +63,14 @@ const FooterManager = () => {
         facebookUrl: footerData.facebookUrl || "",
         xUrl: footerData.xUrl || "",
         copyrightText: footerData.copyrightText || "",
+        crisisHeaderShow: footerData.crisisHeaderShow !== undefined ? footerData.crisisHeaderShow : true,
+        crisisHeaderText: footerData.crisisHeaderText || "",
+        crisisHeaderPhone: footerData.crisisHeaderPhone || "",
+        crisisHeaderPhoneLink: footerData.crisisHeaderPhoneLink || "",
+        crisisHeaderBtnText: footerData.crisisHeaderBtnText || "",
+        crisisHeaderBtnLink: footerData.crisisHeaderBtnLink || "",
+        crisisHeaderBgColor: footerData.crisisHeaderBgColor || "#C92525",
+        crisisHeaderTextColor: footerData.crisisHeaderTextColor || "#ffffff",
       });
 
       // Update logo preview
@@ -110,6 +126,14 @@ const FooterManager = () => {
     payload.append("facebookUrl", formData.facebookUrl || "");
     payload.append("xUrl", formData.xUrl || "");
     payload.append("copyrightText", formData.copyrightText || "");
+    payload.append("crisisHeaderShow", formData.crisisHeaderShow);
+    payload.append("crisisHeaderText", formData.crisisHeaderText || "");
+    payload.append("crisisHeaderPhone", formData.crisisHeaderPhone || "");
+    payload.append("crisisHeaderPhoneLink", formData.crisisHeaderPhoneLink || "");
+    payload.append("crisisHeaderBtnText", formData.crisisHeaderBtnText || "");
+    payload.append("crisisHeaderBtnLink", formData.crisisHeaderBtnLink || "");
+    payload.append("crisisHeaderBgColor", formData.crisisHeaderBgColor || "#C92525");
+    payload.append("crisisHeaderTextColor", formData.crisisHeaderTextColor || "#ffffff");
 
     if (logoFile) {
       payload.append("logo", logoFile);
@@ -278,6 +302,133 @@ const FooterManager = () => {
                 placeholder="Gambling Harm UK (GHUK)."
                 className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
               />
+            </div>
+
+            {/* Crisis Header Section */}
+            <div className="md:col-span-2 border-t border-slate-100 pt-6 space-y-4">
+              <div className="flex items-center justify-between">
+                <h3 className="text-sm font-extrabold text-[#C92525] uppercase tracking-wider">
+                  Crisis Header Banner Settings
+                </h3>
+                <label className="inline-flex items-center cursor-pointer">
+                  <input
+                    type="checkbox"
+                    {...register("crisisHeaderShow")}
+                    className="sr-only peer"
+                  />
+                  <div className="relative w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-[#C92525]"></div>
+                  <span className="ms-3 text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Enable Banner
+                  </span>
+                </label>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Banner Text */}
+                <div className="flex flex-col gap-1.5 md:col-span-2">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Banner Alert Text
+                  </label>
+                  <input
+                    type="text"
+                    {...register("crisisHeaderText")}
+                    placeholder="In Crisis Or Thinking About Suicide? Call"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* Helpline Name/Phone */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Helpline Name & Phone Text
+                  </label>
+                  <input
+                    type="text"
+                    {...register("crisisHeaderPhone")}
+                    placeholder="Samaritans 116 123"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* Helpline Tel Link */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Helpline Tel Number Link (Numbers Only)
+                  </label>
+                  <input
+                    type="text"
+                    {...register("crisisHeaderPhoneLink")}
+                    placeholder="116123"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* Urgent Help Link Text */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Action Button / Link Text
+                  </label>
+                  <input
+                    type="text"
+                    {...register("crisisHeaderBtnText")}
+                    placeholder="Urgent Help →"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* Urgent Help Link Target */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Action Button / Link Target
+                  </label>
+                  <input
+                    type="text"
+                    {...register("crisisHeaderBtnLink")}
+                    placeholder="/urgent-help"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* Background Color */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Banner Background Color
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      {...register("crisisHeaderBgColor")}
+                      className="w-10 h-10 border border-slate-200 cursor-pointer rounded-lg bg-transparent"
+                    />
+                    <input
+                      type="text"
+                      {...register("crisisHeaderBgColor")}
+                      placeholder="#C92525"
+                      className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 w-full"
+                    />
+                  </div>
+                </div>
+
+                {/* Text Color */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Banner Text Color
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="color"
+                      {...register("crisisHeaderTextColor")}
+                      className="w-10 h-10 border border-slate-200 cursor-pointer rounded-lg bg-transparent"
+                    />
+                    <input
+                      type="text"
+                      {...register("crisisHeaderTextColor")}
+                      placeholder="#ffffff"
+                      className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 w-full"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
 
