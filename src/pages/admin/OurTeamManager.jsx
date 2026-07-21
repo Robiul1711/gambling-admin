@@ -23,6 +23,7 @@ const OurTeamManager = () => {
   const axiosSecure = useAxiosSecure();
   const fileInputRef = useRef(null);
 
+  const [activeTab, setActiveTab] = useState("operational"); // "operational" | "trustee"
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingMember, setEditingMember] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -35,6 +36,13 @@ const OurTeamManager = () => {
   });
 
   const teamMembers = responseData?.data || [];
+
+  const operationalMembers = teamMembers.filter(
+    (m) => m.type === "operational" || m.type === "team" || !m.type
+  );
+  const trusteeMembers = teamMembers.filter((m) => m.type === "trustee");
+
+  const currentMembers = activeTab === "operational" ? operationalMembers : trusteeMembers;
 
   // ── 2. React Hook Form ───────────────────────────────────────────────────
   const {
@@ -53,6 +61,7 @@ const OurTeamManager = () => {
       declaredInterests: "",
       email: "",
       displayOrder: 0,
+      type: "operational",
     },
   });
 
@@ -73,11 +82,23 @@ const OurTeamManager = () => {
       declaredInterests: "",
       email: "",
       displayOrder: 0,
+      type: activeTab,
     });
   };
 
   const handleOpenAddModal = () => {
     setEditingMember(null);
+    reset({
+      name: "",
+      role: "",
+      bio: "",
+      initials: "",
+      declaredInterests: "",
+      email: "",
+      displayOrder: 0,
+      type: activeTab,
+    });
+    setLocalPreview("");
     setIsModalOpen(true);
   };
 
@@ -91,6 +112,7 @@ const OurTeamManager = () => {
       declaredInterests: member.declaredInterests || "",
       email: member.email || "",
       displayOrder: member.displayOrder || 0,
+      type: member.type || "operational",
     });
     if (member.image) {
       setLocalPreview(member.image);
@@ -196,6 +218,7 @@ const OurTeamManager = () => {
     payload.append("declaredInterests", formData.declaredInterests || "");
     payload.append("email", formData.email || "");
     payload.append("displayOrder", formData.displayOrder || 0);
+    payload.append("type", formData.type || activeTab);
 
     if (selectedFile) {
       payload.append("image", selectedFile);
@@ -227,10 +250,10 @@ const OurTeamManager = () => {
   return (
     <div className=" mx-auto  text-slate-800 w-full">
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-slate-900">
-            Our Team Manager
+            {activeTab === "operational" ? "Our operational team" : "Our trustees"}
           </h1>
           <p className="text-slate-500 text-sm mt-1">
             Manage the profiles of the team members and trustees displayed on the About Page.
@@ -240,24 +263,69 @@ const OurTeamManager = () => {
           onClick={handleOpenAddModal}
           className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#156E94] to-[#0D3B4F] text-white font-semibold rounded-xl hover:shadow-lg transition-all duration-300 hover:scale-102 active:scale-98"
         >
-          <FaPlus size={14} /> Add Team Member
+          <FaPlus size={14} /> Add {activeTab === "operational" ? "Team Member" : "Trustee"}
+        </button>
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-3 border-b border-slate-200 mb-8">
+        <button
+          onClick={() => setActiveTab("operational")}
+          className={`flex items-center gap-2 px-5 py-3 font-bold text-sm border-b-2 transition-all duration-200 ${
+            activeTab === "operational"
+              ? "border-[#156E94] text-[#156E94]"
+              : "border-transparent text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          Our operational team
+          <span
+            className={`px-2.5 py-0.5 text-xs rounded-full font-semibold ${
+              activeTab === "operational"
+                ? "bg-[#156E94]/10 text-[#156E94]"
+                : "bg-slate-100 text-slate-600"
+            }`}
+          >
+            {operationalMembers.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("trustee")}
+          className={`flex items-center gap-2 px-5 py-3 font-bold text-sm border-b-2 transition-all duration-200 ${
+            activeTab === "trustee"
+              ? "border-[#156E94] text-[#156E94]"
+              : "border-transparent text-slate-500 hover:text-slate-700"
+          }`}
+        >
+          Our trustees
+          <span
+            className={`px-2.5 py-0.5 text-xs rounded-full font-semibold ${
+              activeTab === "trustee"
+                ? "bg-[#156E94]/10 text-[#156E94]"
+                : "bg-slate-100 text-slate-600"
+            }`}
+          >
+            {trusteeMembers.length}
+          </span>
         </button>
       </div>
 
       {/* Grid of Team Members */}
-      {teamMembers.length === 0 ? (
+      {currentMembers.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 bg-white rounded-3xl border border-slate-200/80 shadow-sm text-center px-4">
           <div className="w-16 h-16 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mb-4">
             <FaUser size={24} />
           </div>
-          <h3 className="text-lg font-bold text-slate-700">No Team Members Found</h3>
+          <h3 className="text-lg font-bold text-slate-700">
+            No {activeTab === "operational" ? "Operational Team Members" : "Trustees"} Found
+          </h3>
           <p className="text-slate-500 text-sm max-w-md mt-1">
-            Click the "Add Team Member" button to create the first profile on the website.
+            Click the "Add {activeTab === "operational" ? "Team Member" : "Trustee"}" button to create the first profile in this section.
           </p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {teamMembers.map((member) => (
+          {currentMembers.map((member) => (
             <div
               key={member._id}
               className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden flex flex-col justify-between hover:shadow-md transition-shadow duration-300 relative group"
@@ -403,6 +471,20 @@ const OurTeamManager = () => {
                       />
                     </div>
                   </div>
+                </div>
+
+                {/* Category / Team Section */}
+                <div className="flex flex-col gap-1.5 md:col-span-2">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                    Category / Section <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    {...register("type", { required: "Category is required" })}
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 bg-white font-medium"
+                  >
+                    <option value="operational">Our operational team</option>
+                    <option value="trustee">Our trustees</option>
+                  </select>
                 </div>
 
                 {/* Name */}
