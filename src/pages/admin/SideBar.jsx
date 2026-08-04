@@ -12,8 +12,7 @@ const navItemStyles = {
   base: "flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 relative group",
   active:
     "bg-white/15 text-white shadow-sm before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-1 before:h-6 before:bg-white before:rounded-r-full",
-  inactive:
-    "text-white/70 hover:bg-white/10 hover:text-white",
+  inactive: "text-white/70 hover:bg-white/10 hover:text-white",
 };
 
 const SideBar = ({ sidebar, open, setOpen }) => {
@@ -40,7 +39,7 @@ const SideBar = ({ sidebar, open, setOpen }) => {
         item.subpages.forEach((subpage) => {
           if (subpage.sections) {
             const activeSection = subpage.sections.find(
-              (sec) => sec.path === location.pathname
+              (sec) => sec.path === location.pathname,
             );
             if (activeSection) {
               initialOpenSubpages[subpage.id] = true;
@@ -124,7 +123,11 @@ const SideBar = ({ sidebar, open, setOpen }) => {
           <div className="flex-shrink-0 px-6 pt-8 pb-6">
             <Link to="/dashboard" className="flex items-center gap-3 group">
               <div className="flex items-center justify-center w-10 h-10 bg-white/15 rounded-xl group-hover:bg-white/25 transition-all duration-200 shadow-lg overflow-hidden p-1.5">
-                <img src={footerData?.logo || logo} alt="logo" className="w-full h-full object-contain" />
+                <img
+                  src={footerData?.logo || logo}
+                  alt="logo"
+                  className="w-full h-full object-contain"
+                />
               </div>
               <div className="flex flex-col">
                 <span className="text-white font-semibold text-lg leading-tight tracking-tight">
@@ -156,11 +159,15 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                     <button
                       onClick={() => setIsCMSOpen((v) => !v)}
                       className={`w-full ${navItemStyles.base} ${
-                        parentActive ? navItemStyles.active : navItemStyles.inactive
+                        parentActive
+                          ? navItemStyles.active
+                          : navItemStyles.inactive
                       }`}
                     >
                       <span className="text-lg flex-shrink-0">{item.icon}</span>
-                      <span className="truncate flex-1 text-left">{item.text}</span>
+                      <span className="truncate flex-1 text-left">
+                        {item.text}
+                      </span>
                       <MdKeyboardArrowDown
                         size={18}
                         className={`transition-transform duration-300 flex-shrink-0 ${
@@ -172,7 +179,9 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                     {/* Level 2 Subpages List */}
                     <div
                       className={`transition-all duration-300 ease-in-out overflow-hidden ${
-                        isCMSOpen ? "max-h-[2000px] opacity-100" : "max-h-0 opacity-0"
+                        isCMSOpen
+                          ? "max-h-[2000px] opacity-100"
+                          : "max-h-0 opacity-0"
                       }`}
                     >
                       <div className="ml-4 pl-3 border-l border-white/10 space-y-1.5 py-1">
@@ -183,7 +192,10 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                           if (hasSections) {
                             const isSubpageOpen = !!openSubpages[subpage.id];
                             return (
-                              <div key={subpage.id || subIndex} className="space-y-1">
+                              <div
+                                key={subpage.id || subIndex}
+                                className="space-y-1"
+                              >
                                 {/* Level 2 Page Toggle Button */}
                                 <button
                                   onClick={() => toggleSubpage(subpage.id)}
@@ -193,7 +205,9 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                                       : "text-white/60 hover:text-white hover:bg-white/5"
                                   }`}
                                 >
-                                  <span className="truncate">{subpage.text}</span>
+                                  <span className="truncate">
+                                    {subpage.text}
+                                  </span>
                                   <MdKeyboardArrowDown
                                     size={16}
                                     className={`transition-transform duration-300 flex-shrink-0 ${
@@ -205,7 +219,9 @@ const SideBar = ({ sidebar, open, setOpen }) => {
                                 {/* Level 3 Sections List */}
                                 <div
                                   className={`transition-all duration-200 ease-in-out overflow-hidden ${
-                                    isSubpageOpen ? "max-h-[500px] opacity-100" : "max-h-0 opacity-0"
+                                    isSubpageOpen
+                                      ? "max-h-[500px] opacity-100"
+                                      : "max-h-0 opacity-0"
                                   }`}
                                 >
                                   <div className="ml-3 pl-3 border-l border-white/10 space-y-1 py-1">
@@ -255,14 +271,18 @@ const SideBar = ({ sidebar, open, setOpen }) => {
               }
 
               // Standard Link (Our Team, Resources, Settings, etc.)
-              const isActuallyActive = isActive(item?.activePaths || item?.path);
+              const isActuallyActive = isActive(
+                item?.activePaths || item?.path,
+              );
               return (
                 <Link
                   key={index}
                   to={item?.path}
                   onClick={() => setOpen(false)}
                   className={`${navItemStyles.base} ${
-                    isActuallyActive ? navItemStyles.active : navItemStyles.inactive
+                    isActuallyActive
+                      ? navItemStyles.active
+                      : navItemStyles.inactive
                   }`}
                 >
                   <span className="text-lg flex-shrink-0">{item?.icon}</span>
