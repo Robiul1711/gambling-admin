@@ -1,18 +1,18 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import useClient from "@/hooks/useClient";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
 import { toast } from "react-toastify";
-import { FiSave, FiUpload } from "react-icons/fi";
-import { FaBookOpen, FaImage, FaFilm } from "react-icons/fa";
+import { FiSave } from "react-icons/fi";
+import { FaBookOpen, FaFilm, FaYoutube } from "react-icons/fa";
 
 // Component for managing a single Safeguarding Film card
-function FilmCard({ sectionId, defaultTitle, label }) {
+function FilmCard({ sectionId, defaultTitle, defaultDesc, label }) {
   const axiosSecure = useAxiosSecure();
-  const imageInputRef = useRef(null);
 
   const [title, setTitle] = useState("");
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
+  const [description, setDescription] = useState("");
+  const [videoUrl1, setVideoUrl1] = useState("");
+  const [videoUrl2, setVideoUrl2] = useState("");
   const [saving, setSaving] = useState(false);
 
   const { data: responseData, refetch } = useClient({
@@ -24,33 +24,28 @@ function FilmCard({ sectionId, defaultTitle, label }) {
     if (responseData?.data) {
       const d = responseData.data;
       setTitle(d.title || defaultTitle);
-      if (d.image) setImagePreview(d.image);
+      setDescription(d.description || defaultDesc || "");
+      setVideoUrl1(d.videoUrl1 || d.videoUrl || "");
+      setVideoUrl2(d.videoUrl2 || "");
+    } else {
+      setTitle(defaultTitle);
+      setDescription(defaultDesc || "");
     }
-  }, [responseData, defaultTitle]);
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
+  }, [responseData, defaultTitle, defaultDesc]);
 
   const handleSave = async () => {
     setSaving(true);
     try {
       const formData = new FormData();
       formData.append("title", title);
-      if (imageFile) {
-        formData.append("image", imageFile);
-      } else {
-        formData.append("image", responseData?.data?.image || "");
-      }
+      formData.append("description", description);
+      formData.append("videoUrl1", videoUrl1);
+      formData.append("videoUrl2", videoUrl2);
 
       await axiosSecure.put(`/about/${sectionId}`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       toast.success(`${label} updated successfully!`);
-      setImageFile(null);
       refetch();
     } catch (err) {
       toast.error(err?.response?.data?.message || "Failed to save changes.");
@@ -81,56 +76,51 @@ function FilmCard({ sectionId, defaultTitle, label }) {
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="e.g. Father and Daughter"
+              placeholder="e.g. Mother and Daughter"
               className="px-4 py-2 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white w-full"
             />
           </div>
 
-          {/* Image Upload Area */}
-          <div className="flex flex-col gap-3">
+          {/* Description Input */}
+          <div className="flex flex-col gap-1.5">
             <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-              Still Image
+              Film Description
             </label>
-            <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-50 border border-slate-200 flex items-center justify-center relative shadow-sm">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <FaImage size={28} className="text-slate-300" />
-              )}
-            </div>
-            <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => imageInputRef.current?.click()}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
-              >
-                <FiUpload size={12} className="text-[#156E94]" /> Upload Still
-              </button>
-              {imagePreview && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setImageFile(null);
-                    setImagePreview(responseData?.data?.image || "");
-                    if (imageInputRef.current) imageInputRef.current.value = "";
-                  }}
-                  className="px-3 py-2 bg-red-50 text-red-600 text-xs font-semibold rounded-lg hover:bg-red-100 transition-colors"
-                >
-                  Reset
-                </button>
-              )}
-              <input
-                type="file"
-                ref={imageInputRef}
-                onChange={handleImageChange}
-                accept="image/*"
-                className="hidden"
-              />
-            </div>
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter film description..."
+              rows={3}
+              className="px-4 py-2 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-xs transition-all duration-200 text-slate-700 bg-white w-full resize-y"
+            />
+          </div>
+
+          {/* YouTube Video URL 1 Input */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+              <FaYoutube className="text-red-500" size={12} /> YouTube Video URL 1
+            </label>
+            <input
+              type="url"
+              value={videoUrl1}
+              onChange={(e) => setVideoUrl1(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+              className="px-4 py-2 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-xs transition-all duration-200 text-slate-700 bg-white w-full"
+            />
+          </div>
+
+          {/* YouTube Video URL 2 Input (Optional) */}
+          <div className="flex flex-col gap-1.5">
+            <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
+              <FaYoutube className="text-red-500" size={12} /> YouTube Video URL 2 (Optional)
+            </label>
+            <input
+              type="url"
+              value={videoUrl2}
+              onChange={(e) => setVideoUrl2(e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=..."
+              className="px-4 py-2 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-xs transition-all duration-200 text-slate-700 bg-white w-full"
+            />
           </div>
         </div>
       </div>
@@ -140,7 +130,7 @@ function FilmCard({ sectionId, defaultTitle, label }) {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center justify-center gap-2 bg-Primary hover:bg-Primary/90 text-white font-semibold text-xs px-4 py-2 rounded-lg transition-colors disabled:opacity-60 w-full"
+          className="flex items-center justify-center gap-2 bg-Primary hover:bg-Primary/90 text-white font-semibold text-xs px-4 py-2.5 rounded-lg transition-colors disabled:opacity-60 w-full"
         >
           <FiSave size={12} />
           {saving ? "Saving..." : `Save ${label}`}
@@ -168,8 +158,10 @@ export default function CYPSafeguardingFilmsManager() {
   useEffect(() => {
     if (headerResponse?.data) {
       setHeaderForm({
-        title: headerResponse.data.title || "Stills from GHUK’s Safeguarding films",
-        description: headerResponse.data.description || "Three short films, each made with affected others, illustrate what gambling harm looks like for the children in a household. Watch them all on the Affected others.",
+        title: headerResponse.data.title || "Safeguarding films",
+        description:
+          headerResponse.data.description ||
+          "These films were developed with lived experience input to ensure authenticity and reflect real safeguarding scenarios reported by children and families affected by gambling harm.",
       });
     }
   }, [headerResponse]);
@@ -195,9 +187,11 @@ export default function CYPSafeguardingFilmsManager() {
     <div className="space-y-6">
       {/* Page Header */}
       <div className="bg-gradient-to-r from-[#0F4A63] to-[#156E94] rounded-2xl px-7 py-5 text-white shadow-sm">
-        <h1 className="text-xl font-bold tracking-tight">Children & Young People Page CMS</h1>
+        <h1 className="text-xl font-bold tracking-tight">
+          Children & Safeguarding CMS — Safeguarding Films
+        </h1>
         <p className="text-white/70 text-sm mt-1">
-          Manage the Safeguarding Films section, including header text and film image preview stills.
+          Manage Safeguarding Films section title, descriptions, and YouTube video URLs.
         </p>
       </div>
 
@@ -222,8 +216,10 @@ export default function CYPSafeguardingFilmsManager() {
             <input
               type="text"
               value={headerForm.title}
-              onChange={(e) => setHeaderForm((p) => ({ ...p, title: e.target.value }))}
-              placeholder="Stills from GHUK’s Safeguarding films"
+              onChange={(e) =>
+                setHeaderForm((p) => ({ ...p, title: e.target.value }))
+              }
+              placeholder="Safeguarding films"
               className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white"
             />
           </div>
@@ -234,9 +230,11 @@ export default function CYPSafeguardingFilmsManager() {
             </label>
             <textarea
               value={headerForm.description}
-              onChange={(e) => setHeaderForm((p) => ({ ...p, description: e.target.value }))}
+              onChange={(e) =>
+                setHeaderForm((p) => ({ ...p, description: e.target.value }))
+              }
               placeholder="Enter section description..."
-              rows={4}
+              rows={3}
               className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white resize-y"
             />
           </div>
@@ -256,21 +254,26 @@ export default function CYPSafeguardingFilmsManager() {
 
       {/* Films Cards Section */}
       <div>
-        <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">Safeguarding Films</h2>
+        <h2 className="text-lg font-bold text-slate-800 mb-4 px-2">
+          Safeguarding Films & Video Embeds
+        </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <FilmCard
             sectionId="cyp-safeguarding-film-1"
-            defaultTitle="Father and Daughter"
-            label="Film #1 (Father and Daughter)"
+            defaultTitle="Mother and Daughter"
+            defaultDesc="This film focuses on how gambling can dominate attention and decision-making, leading to repeated emotional and practical neglect. When gambling becomes a priority, children become unseen."
+            label="Film #1 (Mother and Daughter)"
           />
           <FilmCard
             sectionId="cyp-safeguarding-film-2"
-            defaultTitle="Mother and Daughter"
-            label="Film #2 (Mother and Daughter)"
+            defaultTitle="Birthday Card"
+            defaultDesc="This film highlights how children can be harmed through subtle pressure rather than overt force, and how such behaviour can become normalised. Often those who are harmed the most are the people we love the most."
+            label="Film #2 (Birthday Card)"
           />
           <FilmCard
             sectionId="cyp-safeguarding-film-3"
             defaultTitle="Brothers"
+            defaultDesc="Gambling takes more than money. It can take you away from those who need you most. The film ends before the football cards are given, leaving the younger brother standing alone and disappointed."
             label="Film #3 (Brothers)"
           />
         </div>
