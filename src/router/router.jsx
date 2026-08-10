@@ -40,6 +40,7 @@ import OurWorkStigmaManager from "@/pages/admin/OurWorkStigmaManager";
 import OurWorkInequalityManager from "@/pages/admin/OurWorkInequalityManager";
 import OurWorkPolicyManager from "@/pages/admin/OurWorkPolicyManager";
 import OurWorkMembersManager from "@/pages/admin/OurWorkMembersManager";
+import RegistrationManager from "@/pages/admin/RegistrationManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -103,6 +104,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/news-research/audio",
         element: <PhoenixAudioManager />,
+      },
+      {
+        path: "/dashboard/registrations",
+        element: <RegistrationManager />,
       },
     ],
   },

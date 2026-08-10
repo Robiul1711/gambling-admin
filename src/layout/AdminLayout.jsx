@@ -13,6 +13,7 @@ import {
   FaBookOpen,
   FaAlignLeft,
   FaRegNewspaper,
+  FaUserCheck,
 } from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
@@ -128,6 +129,12 @@ const AdminLayout = () => {
       icon: <FaFileAlt />,
       text: "Resources",
       path: "/dashboard/resources",
+    },
+    {
+      id: 5,
+      icon: <FaUserCheck />,
+      text: "Registered Users",
+      path: "/dashboard/registrations",
     },
     {
       id: 2,
