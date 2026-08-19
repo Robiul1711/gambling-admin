@@ -9,6 +9,7 @@ import {
   FaInstagram,
   FaFacebook,
   FaTwitter,
+  FaLinkedin,
   FaAlignLeft,
 } from "react-icons/fa";
 import useClient from "@/hooks/useClient";
@@ -42,6 +43,7 @@ const FooterManager = () => {
       instagramUrl: "",
       facebookUrl: "",
       xUrl: "",
+      linkedinUrl: "",
       copyrightText: "",
       crisisHeaderShow: true,
       crisisHeaderText: "",
@@ -62,6 +64,7 @@ const FooterManager = () => {
         instagramUrl: footerData.instagramUrl || "",
         facebookUrl: footerData.facebookUrl || "",
         xUrl: footerData.xUrl || "",
+        linkedinUrl: footerData.linkedinUrl || "",
         copyrightText: footerData.copyrightText || "",
         crisisHeaderShow: footerData.crisisHeaderShow !== undefined ? footerData.crisisHeaderShow : true,
         crisisHeaderText: footerData.crisisHeaderText || "",
@@ -125,6 +128,7 @@ const FooterManager = () => {
     payload.append("instagramUrl", formData.instagramUrl || "");
     payload.append("facebookUrl", formData.facebookUrl || "");
     payload.append("xUrl", formData.xUrl || "");
+    payload.append("linkedinUrl", formData.linkedinUrl || "");
     payload.append("copyrightText", formData.copyrightText || "");
     payload.append("crisisHeaderShow", formData.crisisHeaderShow);
     payload.append("crisisHeaderText", formData.crisisHeaderText || "");
@@ -249,7 +253,7 @@ const FooterManager = () => {
                 Social Media Links (Leave blank to hide in Footer)
               </h3>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                 {/* Instagram */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
@@ -285,6 +289,19 @@ const FooterManager = () => {
                     type="text"
                     {...register("xUrl")}
                     placeholder="https://x.com/gamblingharmuk"
+                    className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+                  />
+                </div>
+
+                {/* LinkedIn */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                    <FaLinkedin className="text-[#0A66C2]" /> LinkedIn URL
+                  </label>
+                  <input
+                    type="text"
+                    {...register("linkedinUrl")}
+                    placeholder="https://www.linkedin.com/company/gamblingharmuk/"
                     className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
                   />
                 </div>
