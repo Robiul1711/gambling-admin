@@ -112,6 +112,11 @@ const AdminLayout = () => {
           ],
         },
         {
+          id: "crisis-header",
+          text: "Crisis Header Banner",
+          path: "/dashboard/crisis-header",
+        },
+        {
           id: "footer",
           text: "Footer Settings",
           path: "/dashboard/footer",
