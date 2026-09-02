@@ -144,7 +144,7 @@ const Dashboard = () => {
           </div>
           <div className="flex-shrink-0 flex gap-3">
             <a
-              href="https://gambling-backend.vercel.app"
+              href="https://gambling-harm-uk.netlify.app"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white font-semibold text-sm px-5 py-3 rounded-2xl border border-white/20 transition-all shadow-md group"
