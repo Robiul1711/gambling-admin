@@ -69,6 +69,7 @@ const Dashboard = () => {
       colorClass: "border-l-[#156E94]",
       links: [
         { text: "Edit Home Banner", path: "/dashboard/home/banner" },
+        { text: "Crisis Header Banner", path: "/dashboard/crisis-header" },
         { text: "Edit About Settings", path: "/dashboard/about" },
         { text: "Edit Our Mission Settings", path: "/dashboard/about/mission" },
         { text: "Manage Footer & Brand Info", path: "/dashboard/footer" },

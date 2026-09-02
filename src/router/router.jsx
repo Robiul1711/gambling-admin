@@ -13,6 +13,7 @@ import ResourceManager from "@/pages/admin/ResourceManager";
 import AboutPageManager from "@/pages/admin/AboutPageManager";
 import AboutMissionManager from "@/pages/admin/AboutMissionManager";
 import FooterManager from "@/pages/admin/FooterManager";
+import CrisisHeaderManager from "@/pages/admin/CrisisHeaderManager";
 import NewsResearchSettingsManager from "@/pages/admin/NewsResearchSettingsManager";
 import PhoenixAudioManager from "@/pages/admin/PhoenixAudioManager";
 import ProfessionalsManager from "@/pages/admin/ProfessionalsManager";
@@ -96,6 +97,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/our-work/inequality", element: <OurWorkInequalityManager /> },
       { path: "/dashboard/our-work/policy", element: <OurWorkPolicyManager /> },
       { path: "/dashboard/our-work/members-only", element: <OurWorkMembersManager /> },
+      { path: "/dashboard/crisis-header", element: <CrisisHeaderManager /> },
       { path: "/dashboard/footer", element: <FooterManager /> },
       {
         path: "/dashboard/news-research/settings",
