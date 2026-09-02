@@ -42,6 +42,7 @@ import OurWorkInequalityManager from "@/pages/admin/OurWorkInequalityManager";
 import OurWorkPolicyManager from "@/pages/admin/OurWorkPolicyManager";
 import OurWorkMembersManager from "@/pages/admin/OurWorkMembersManager";
 import RegistrationManager from "@/pages/admin/RegistrationManager";
+import MemberApprovalsManager from "@/pages/admin/MemberApprovalsManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -110,6 +111,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/registrations",
         element: <RegistrationManager />,
+      },
+      {
+        path: "/dashboard/members",
+        element: <MemberApprovalsManager />,
       },
     ],
   },

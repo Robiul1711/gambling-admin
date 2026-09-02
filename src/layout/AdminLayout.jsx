@@ -14,6 +14,7 @@ import {
   FaAlignLeft,
   FaRegNewspaper,
   FaUserCheck,
+  FaUserShield,
 } from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
@@ -124,6 +125,18 @@ const AdminLayout = () => {
       ],
     },
     {
+      id: 6,
+      icon: <FaUserShield />,
+      text: "Member Approvals",
+      path: "/dashboard/members",
+    },
+    {
+      id: 5,
+      icon: <FaUserCheck />,
+      text: "Registered Users",
+      path: "/dashboard/registrations",
+    },
+    {
       id: 3,
       icon: <FaUsers />,
       text: "Our Team",
@@ -134,12 +147,6 @@ const AdminLayout = () => {
       icon: <FaFileAlt />,
       text: "Resources",
       path: "/dashboard/resources",
-    },
-    {
-      id: 5,
-      icon: <FaUserCheck />,
-      text: "Registered Users",
-      path: "/dashboard/registrations",
     },
     {
       id: 2,
