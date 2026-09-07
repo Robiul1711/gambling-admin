@@ -38,7 +38,7 @@ export default function GetHelpScaleManager() {
       const d = responseData.data;
       setForm({
         title: d.title || "The scale: you are not the only one",
-        description: d.description || "For every person in the UK experiencing severe gambling harm, an estimated Six To Ten Others (partners, parents, children, siblings, close friends) carry significant harm of their own. That puts the affected-others population, conservatively, in the region of 2.4 Million People In The UK at any given time.",
+        description: d.description || "For every person in the UK experiencing severe gambling harm, an estimated Six To Ten Others (partners, parents, children, siblings, close friends) carry significant harm of their own. That puts the population of people harmed by someone else’s gambling, conservatively, in the region of 2.4 Million People In The UK at any given time.",
         audioTitle: d.audioTitle || "It is common to be experiencing some or all of the following: anxiety that doesn't switch off, financial fear, sleep loss, hyper-vigilance about phones and post and bank balances, walking on eggshells, isolation from friends, shame about even talking about it, and a quiet sense that you must be doing something wrong because nothing you've tried has fixed it.",
         audioSource: d.audioSource || "None of that is your fault. And none of it means you're failing.",
         subtitle: d.subtitle || "Still from GHUK's Brothers Gambling Harm safeguarding film — a younger sibling sits with what they're carrying.",

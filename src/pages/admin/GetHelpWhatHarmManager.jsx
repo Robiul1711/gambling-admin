@@ -207,7 +207,7 @@ export default function GetHelpWhatHarmManager() {
     if (headerResponse?.data) {
       setHeaderForm({
         title: headerResponse.data.title || "What gambling harm looks like inside a home.",
-        description: headerResponse.data.description || "Three short films, each made with affected others. Used in our medical-school teaching, safeguarding training and public-health work. Watch them in any order.",
+        description: headerResponse.data.description || "Three short films, each made with people harmed by someone else’s gambling. Used in our medical-school teaching, safeguarding training and public-health work. Watch them in any order.",
       });
     }
   }, [headerResponse]);
