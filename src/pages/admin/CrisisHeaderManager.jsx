@@ -31,6 +31,7 @@ const CrisisHeaderManager = () => {
       crisisHeaderText: "",
       crisisHeaderPhone: "",
       crisisHeaderPhoneLink: "",
+      crisisHeaderSubText: "Free, 24/7.",
       crisisHeaderBtnText: "",
       crisisHeaderBtnLink: "",
       crisisHeaderBgColor: "#156E94",
@@ -41,6 +42,7 @@ const CrisisHeaderManager = () => {
   const watchedShow = watch("crisisHeaderShow");
   const watchedText = watch("crisisHeaderText");
   const watchedPhone = watch("crisisHeaderPhone");
+  const watchedSubText = watch("crisisHeaderSubText");
   const watchedBtnText = watch("crisisHeaderBtnText");
   const watchedBgColor = watch("crisisHeaderBgColor") || "#156E94";
   const watchedTextColor = watch("crisisHeaderTextColor") || "#ffffff";
@@ -56,6 +58,10 @@ const CrisisHeaderManager = () => {
         crisisHeaderText: footerData.crisisHeaderText || "",
         crisisHeaderPhone: footerData.crisisHeaderPhone || "",
         crisisHeaderPhoneLink: footerData.crisisHeaderPhoneLink || "",
+        crisisHeaderSubText:
+          footerData.crisisHeaderSubText !== undefined
+            ? footerData.crisisHeaderSubText
+            : "Free, 24/7.",
         crisisHeaderBtnText: footerData.crisisHeaderBtnText || "",
         crisisHeaderBtnLink: footerData.crisisHeaderBtnLink || "",
         crisisHeaderBgColor: footerData.crisisHeaderBgColor || "#156E94",
@@ -107,6 +113,12 @@ const CrisisHeaderManager = () => {
     payload.append(
       "crisisHeaderPhoneLink",
       formData.crisisHeaderPhoneLink || "",
+    );
+    payload.append(
+      "crisisHeaderSubText",
+      formData.crisisHeaderSubText !== undefined
+        ? formData.crisisHeaderSubText
+        : "Free, 24/7.",
     );
     payload.append("crisisHeaderBtnText", formData.crisisHeaderBtnText || "");
     payload.append("crisisHeaderBtnLink", formData.crisisHeaderBtnLink || "");
@@ -163,6 +175,9 @@ const CrisisHeaderManager = () => {
                 <span className="font-bold underline cursor-pointer">
                   {watchedPhone}
                 </span>
+              )}
+              {watchedSubText && (
+                <span>{watchedSubText}</span>
               )}
             </div>
             {watchedBtnText && (
@@ -251,6 +266,19 @@ const CrisisHeaderManager = () => {
                 type="text"
                 {...register("crisisHeaderPhoneLink")}
                 placeholder="116123"
+                className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
+              />
+            </div>
+
+            {/* Availability / Subtext */}
+            <div className="flex flex-col gap-1.5 md:col-span-2">
+              <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
+                Availability / Suffix Text (e.g. Free, 24/7.)
+              </label>
+              <input
+                type="text"
+                {...register("crisisHeaderSubText")}
+                placeholder="Free, 24/7."
                 className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200"
               />
             </div>

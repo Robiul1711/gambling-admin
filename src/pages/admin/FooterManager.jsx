@@ -145,6 +145,12 @@ const FooterManager = () => {
       footerData?.crisisHeaderPhoneLink || "",
     );
     payload.append(
+      "crisisHeaderSubText",
+      footerData?.crisisHeaderSubText !== undefined
+        ? footerData.crisisHeaderSubText
+        : "Free, 24/7.",
+    );
+    payload.append(
       "crisisHeaderBtnText",
       footerData?.crisisHeaderBtnText || "",
     );
