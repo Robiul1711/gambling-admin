@@ -29,7 +29,7 @@ export default function OurWorkExplainedManager() {
       setForm({
         title: d.title || "Gambling Explained.",
         subtitle: d.subtitle || "Our work • Gambling Explained",
-        description: d.description || "Beyond individual blame. Toward systemic accountability. GHUK's flagship evidence summary, independently written and funded by affected-other researchers, in the lineage of WHO's Tobacco Explained (Bates & Rowell, 2000). First published 2021 for the Gambling Act Review. 2025/26 edition in preparation. Ten chapters, each below.",
+        description: d.description || "Beyond individual blame. Toward systemic accountability. GHUK's flagship evidence summary, independently written and funded by researchers harmed by someone else’s gambling, in the lineage of WHO's Tobacco Explained (Bates & Rowell, 2000). First published 2021 for the Gambling Act Review. 2025/26 edition in preparation. Ten chapters, each below.",
       });
       if (d.image) setImagePreview(d.image);
     }

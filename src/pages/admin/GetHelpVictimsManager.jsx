@@ -28,10 +28,10 @@ export default function GetHelpVictimsManager() {
     if (responseData?.data) {
       const d = responseData.data;
       setForm({
-        title: d.title || "Affected Others Are Direct Victims, Not Concerned Bystanders.",
+        title: d.title || "People Harmed by Someone Else’s Gambling Are Direct Victims, Not Concerned Bystanders.",
         subtitle: d.subtitle || "Our position",
         description: d.description || "You did not consent to a product being marketed at someone you love. The financial, mental-health and developmental harm to you is not a side-effect of \"someone else's choice\", it is part of the harm the product produced. The UK gambling-harm response routinely understates this. We don't.",
-        audioTitle: d.audioTitle || "You can access support for you, in your own right, today, without waiting for the person who gambles to be \"ready\". Call the National Gambling Helpline (0808 8020 133), they support affected others, not only people who gamble.",
+        audioTitle: d.audioTitle || "You can access support for you, in your own right, today, without waiting for the person who gambles to be \"ready\". Call the National Gambling Helpline (0808 8020 133), they support people harmed by someone else’s gambling, not only people who gamble.",
       });
       if (d.image) setImagePreview(d.image);
     }
@@ -115,7 +115,7 @@ export default function GetHelpVictimsManager() {
               type="text"
               value={form.title}
               onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-              placeholder="Affected Others Are Direct Victims, Not Concerned Bystanders."
+              placeholder="People Harmed by Someone Else’s Gambling Are Direct Victims, Not Concerned Bystanders."
               className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white"
             />
           </div>

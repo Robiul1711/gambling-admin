@@ -165,6 +165,9 @@ export default function RegistrationManager() {
     "Healthcare or public-health professional",
     "Researcher or academic",
     "Educator or teacher",
+    "Employer or workplace",
+    "Charity or community organisation",
+    "Public sector or local authority",
     "Supporter",
   ];
 

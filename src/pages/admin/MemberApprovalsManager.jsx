@@ -665,6 +665,15 @@ export default function MemberApprovalsManager() {
                   </div>
                 </div>
               )}
+
+              {selectedMember.anythingElse && (
+                <div className="pt-2 border-t border-slate-100">
+                  <span className="text-xs font-semibold text-slate-400 uppercase">Anything else they wanted to tell us:</span>
+                  <div className="mt-1 p-3 bg-sky-50/60 rounded-xl text-slate-700 text-xs leading-relaxed border border-sky-100">
+                    {selectedMember.anythingElse}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
