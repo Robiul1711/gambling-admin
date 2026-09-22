@@ -43,6 +43,7 @@ import OurWorkPolicyManager from "@/pages/admin/OurWorkPolicyManager";
 import OurWorkMembersManager from "@/pages/admin/OurWorkMembersManager";
 import RegistrationManager from "@/pages/admin/RegistrationManager";
 import MemberApprovalsManager from "@/pages/admin/MemberApprovalsManager";
+import BookingManager from "@/pages/admin/BookingManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -111,6 +112,10 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/registrations",
         element: <RegistrationManager />,
+      },
+      {
+        path: "/dashboard/bookings",
+        element: <BookingManager />,
       },
       {
         path: "/dashboard/members",
