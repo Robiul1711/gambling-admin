@@ -15,6 +15,7 @@ import {
   FaRegNewspaper,
   FaUserCheck,
   FaUserShield,
+  FaCalendarCheck,
 } from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
@@ -135,6 +136,12 @@ const AdminLayout = () => {
       icon: <FaUserCheck />,
       text: "Registered Users",
       path: "/dashboard/registrations",
+    },
+    {
+      id: "bookings",
+      icon: <FaCalendarCheck />,
+      text: "Booking Requests",
+      path: "/dashboard/bookings",
     },
     {
       id: 3,
