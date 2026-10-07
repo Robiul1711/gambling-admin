@@ -32,7 +32,8 @@ const initialFormState = {
   oneLineDescription: "",
   summary: "",
   aboutParagraphs: ["", ""],
-  howToJoin: "Registration is required. Click the button below to reserve your place.",
+  howToJoin:
+    "Registration is required. Click the button below to reserve your place.",
   status: "upcoming",
   order: 0,
 };
@@ -133,7 +134,7 @@ export default function EventManager() {
         if (res.data?.success) {
           toast.success("Event updated successfully.");
           setEvents((prev) =>
-            prev.map((item) => (item._id === editingId ? res.data.data : item))
+            prev.map((item) => (item._id === editingId ? res.data.data : item)),
           );
           setIsModalOpen(false);
         }
@@ -197,7 +198,8 @@ export default function EventManager() {
             Events Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Create, update and manage upcoming webinars, training sessions and talks.
+            Create, update and manage upcoming webinars, training sessions and
+            talks.
           </p>
         </div>
 
@@ -222,20 +224,34 @@ export default function EventManager() {
       {/* Stats Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-white border border-gray-200 rounded-xl p-4 shadow-2xs">
-          <p className="text-xs font-semibold text-gray-500 uppercase">Total Events</p>
+          <p className="text-xs font-semibold text-gray-500 uppercase">
+            Total Events
+          </p>
           <p className="text-2xl font-bold text-gray-900 mt-1">{stats.total}</p>
         </div>
         <div className="bg-white border border-sky-200 bg-sky-50/40 rounded-xl p-4 shadow-2xs">
-          <p className="text-xs font-semibold text-sky-700 uppercase">Upcoming</p>
-          <p className="text-2xl font-bold text-sky-900 mt-1">{stats.upcoming}</p>
+          <p className="text-xs font-semibold text-sky-700 uppercase">
+            Upcoming
+          </p>
+          <p className="text-2xl font-bold text-sky-900 mt-1">
+            {stats.upcoming}
+          </p>
         </div>
         <div className="bg-white border border-emerald-200 bg-emerald-50/40 rounded-xl p-4 shadow-2xs">
-          <p className="text-xs font-semibold text-emerald-700 uppercase">Completed</p>
-          <p className="text-2xl font-bold text-emerald-900 mt-1">{stats.completed}</p>
+          <p className="text-xs font-semibold text-emerald-700 uppercase">
+            Completed
+          </p>
+          <p className="text-2xl font-bold text-emerald-900 mt-1">
+            {stats.completed}
+          </p>
         </div>
         <div className="bg-white border border-amber-200 bg-amber-50/40 rounded-xl p-4 shadow-2xs">
-          <p className="text-xs font-semibold text-amber-700 uppercase">Draft</p>
-          <p className="text-2xl font-bold text-amber-900 mt-1">{stats.draft}</p>
+          <p className="text-xs font-semibold text-amber-700 uppercase">
+            Draft
+          </p>
+          <p className="text-2xl font-bold text-amber-900 mt-1">
+            {stats.draft}
+          </p>
         </div>
       </div>
 
@@ -253,7 +269,9 @@ export default function EventManager() {
         </div>
 
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <span className="text-xs font-semibold text-gray-500 uppercase">Status:</span>
+          <span className="text-xs font-semibold text-gray-500 uppercase">
+            Status:
+          </span>
           {["All", "upcoming", "completed", "draft"].map((status) => (
             <button
               key={status}
@@ -280,7 +298,9 @@ export default function EventManager() {
         ) : filteredEvents.length === 0 ? (
           <div className="py-16 text-center text-gray-500">
             <FiCalendar className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-            <p className="text-base font-semibold text-gray-700">No events found</p>
+            <p className="text-base font-semibold text-gray-700">
+              No events found
+            </p>
             <p className="text-sm text-gray-400 mt-1">
               Click "Add New Event" to publish your first talk or workshop.
             </p>
@@ -300,7 +320,10 @@ export default function EventManager() {
               </thead>
               <tbody className="divide-y divide-gray-100">
                 {filteredEvents.map((ev) => (
-                  <tr key={ev._id} className="hover:bg-gray-50/80 transition-colors">
+                  <tr
+                    key={ev._id}
+                    className="hover:bg-gray-50/80 transition-colors"
+                  >
                     <td className="py-3 px-4 whitespace-nowrap">
                       <div className="w-11 h-11 rounded-lg border border-gray-200 bg-gray-50 flex flex-col items-center justify-center">
                         <span className="text-xs font-bold text-gray-800 leading-none">
@@ -316,7 +339,9 @@ export default function EventManager() {
                       <span className="inline-block text-[10px] font-bold px-2 py-0.5 rounded bg-sky-100 text-sky-800 mb-1">
                         {ev.category}
                       </span>
-                      <h4 className="font-bold text-gray-900 leading-snug">{ev.title}</h4>
+                      <h4 className="font-bold text-gray-900 leading-snug">
+                        {ev.title}
+                      </h4>
                       <p className="text-xs text-gray-500 mt-0.5 line-clamp-1">
                         {ev.oneLineDescription || ev.summary}
                       </p>
@@ -324,8 +349,12 @@ export default function EventManager() {
 
                     <td className="py-3 px-4 text-xs text-gray-600">
                       <p className="font-medium text-gray-800">{ev.format}</p>
-                      <p className="text-gray-500 line-clamp-1">{ev.location}</p>
-                      <p className="text-[11px] text-gray-400 mt-0.5">{ev.time}</p>
+                      <p className="text-gray-500 line-clamp-1">
+                        {ev.location}
+                      </p>
+                      <p className="text-[11px] text-gray-400 mt-0.5">
+                        {ev.time}
+                      </p>
                     </td>
 
                     <td className="py-3 px-4 text-xs font-semibold text-gray-800">
@@ -338,8 +367,8 @@ export default function EventManager() {
                           ev.status === "upcoming"
                             ? "bg-sky-100 text-sky-800"
                             : ev.status === "completed"
-                            ? "bg-emerald-100 text-emerald-800"
-                            : "bg-amber-100 text-amber-800"
+                              ? "bg-emerald-100 text-emerald-800"
+                              : "bg-amber-100 text-amber-800"
                         }`}
                       >
                         {ev.status}
@@ -408,7 +437,9 @@ export default function EventManager() {
                     type="text"
                     required
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     placeholder="e.g. Systems-Level Approaches to Gambling Harm"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#156E94]/30 focus:border-[#156E94]"
                   />
@@ -420,7 +451,9 @@ export default function EventManager() {
                   </label>
                   <select
                     value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-[#156E94]/30 focus:border-[#156E94]"
                   >
                     <option value="WEBINAR">WEBINAR</option>
@@ -444,11 +477,15 @@ export default function EventManager() {
                     required
                     maxLength={6}
                     value={formData.day}
-                    onChange={(e) => setFormData({ ...formData, day: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, day: e.target.value })
+                    }
                     placeholder="e.g. 24 or DD"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
-                  <span className="text-[10px] text-gray-400">Card badge day</span>
+                  <span className="text-[10px] text-gray-400">
+                    Card badge day
+                  </span>
                 </div>
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -459,11 +496,18 @@ export default function EventManager() {
                     required
                     maxLength={6}
                     value={formData.month}
-                    onChange={(e) => setFormData({ ...formData, month: e.target.value.toUpperCase() })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        month: e.target.value.toUpperCase(),
+                      })
+                    }
                     placeholder="e.g. OCT or MON"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg uppercase"
                   />
-                  <span className="text-[10px] text-gray-400">Card badge month</span>
+                  <span className="text-[10px] text-gray-400">
+                    Card badge month
+                  </span>
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block text-xs font-semibold text-gray-700 mb-1">
@@ -473,11 +517,15 @@ export default function EventManager() {
                     type="text"
                     required
                     value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, date: e.target.value })
+                    }
                     placeholder="e.g. Wednesday, 24 October 2026"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
-                  <span className="text-[10px] text-gray-400">Shown in details and register pages</span>
+                  <span className="text-[10px] text-gray-400">
+                    Shown in details and register pages
+                  </span>
                 </div>
               </div>
 
@@ -491,7 +539,9 @@ export default function EventManager() {
                     type="text"
                     required
                     value={formData.time}
-                    onChange={(e) => setFormData({ ...formData, time: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, time: e.target.value })
+                    }
                     placeholder="e.g. 1:00pm – 2:30pm GMT"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
@@ -503,12 +553,16 @@ export default function EventManager() {
                   </label>
                   <select
                     value={formData.format}
-                    onChange={(e) => setFormData({ ...formData, format: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, format: e.target.value })
+                    }
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white"
                   >
                     <option value="Online">Online</option>
                     <option value="Online (Zoom)">Online (Zoom)</option>
-                    <option value="Online live stream">Online live stream</option>
+                    <option value="Online live stream">
+                      Online live stream
+                    </option>
                     <option value="In person">In person</option>
                     <option value="Hybrid">Hybrid</option>
                   </select>
@@ -521,7 +575,9 @@ export default function EventManager() {
                   <input
                     type="text"
                     value={formData.cost}
-                    onChange={(e) => setFormData({ ...formData, cost: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, cost: e.target.value })
+                    }
                     placeholder="e.g. Free or £25"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
@@ -533,7 +589,9 @@ export default function EventManager() {
                   </label>
                   <select
                     value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, status: e.target.value })
+                    }
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white"
                   >
                     <option value="upcoming">Upcoming</option>
@@ -552,7 +610,9 @@ export default function EventManager() {
                   <input
                     type="text"
                     value={formData.location}
-                    onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, location: e.target.value })
+                    }
                     placeholder="e.g. Online via Zoom or City Hall, London"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
@@ -564,7 +624,9 @@ export default function EventManager() {
                   <input
                     type="text"
                     value={formData.whoItIsFor}
-                    onChange={(e) => setFormData({ ...formData, whoItIsFor: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, whoItIsFor: e.target.value })
+                    }
                     placeholder="e.g. Healthcare professionals, teachers, researchers"
                     className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                   />
@@ -580,7 +642,10 @@ export default function EventManager() {
                   type="text"
                   value={formData.oneLineDescription}
                   onChange={(e) =>
-                    setFormData({ ...formData, oneLineDescription: e.target.value })
+                    setFormData({
+                      ...formData,
+                      oneLineDescription: e.target.value,
+                    })
                   }
                   placeholder="e.g. A one-line description of the event, who it is for and why it matters."
                   className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
@@ -595,7 +660,9 @@ export default function EventManager() {
                 <textarea
                   rows={2}
                   value={formData.summary}
-                  onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, summary: e.target.value })
+                  }
                   placeholder="Short summary displayed on the event card..."
                   className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg"
                 />
@@ -621,7 +688,9 @@ export default function EventManager() {
                       <textarea
                         rows={2}
                         value={para}
-                        onChange={(e) => handleParagraphChange(i, e.target.value)}
+                        onChange={(e) =>
+                          handleParagraphChange(i, e.target.value)
+                        }
                         placeholder={`Paragraph ${i + 1}...`}
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg text-xs"
                       />
@@ -653,7 +722,11 @@ export default function EventManager() {
                   disabled={submitting}
                   className="px-6 py-2.5 rounded-lg bg-[#156E94] hover:bg-[#0E5270] text-white text-sm font-semibold transition-colors shadow-sm disabled:opacity-70"
                 >
-                  {submitting ? "Saving..." : editingId ? "Update Event" : "Create Event"}
+                  {submitting
+                    ? "Saving..."
+                    : editingId
+                      ? "Update Event"
+                      : "Create Event"}
                 </button>
               </div>
             </form>

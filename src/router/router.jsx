@@ -24,6 +24,7 @@ import PublicHealthPositionManager from "@/pages/admin/PublicHealthPositionManag
 import CYPBannerManager from "@/pages/admin/CYPBannerManager";
 import CYPIntroManager from "@/pages/admin/CYPIntroManager";
 import CYPSafeguardingFilmsManager from "@/pages/admin/CYPSafeguardingFilmsManager";
+import TeachersCypFilmStillsManager from "@/pages/admin/TeachersCypFilmStillsManager";
 import GetHelpOverviewManager from "@/pages/admin/GetHelpOverviewManager";
 import GetHelpCheckInManager from "@/pages/admin/GetHelpCheckInManager";
 import GetHelpTreatmentManager from "@/pages/admin/GetHelpTreatmentManager";
@@ -85,6 +86,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/cyp/banner", element: <CYPBannerManager /> },
       { path: "/dashboard/cyp/intro", element: <CYPIntroManager /> },
       { path: "/dashboard/cyp/safeguarding-films", element: <CYPSafeguardingFilmsManager /> },
+      { path: "/dashboard/cyp/film-stills", element: <TeachersCypFilmStillsManager /> },
       { path: "/dashboard/get-help/overview", element: <GetHelpOverviewManager /> },
       { path: "/dashboard/get-help/check-in", element: <GetHelpCheckInManager /> },
       { path: "/dashboard/get-help/treatment", element: <GetHelpTreatmentManager /> },

@@ -84,6 +84,7 @@ const AdminLayout = () => {
             { text: "Banner Section", path: "/dashboard/cyp/banner" },
             { text: "Intro Section", path: "/dashboard/cyp/intro" },
             { text: "Safeguarding Films", path: "/dashboard/cyp/safeguarding-films" },
+            { text: "Teachers Film Stills", path: "/dashboard/cyp/film-stills" },
           ],
         },
         {

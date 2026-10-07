@@ -89,6 +89,7 @@ const Dashboard = () => {
         { text: "Children & Young People Banner", path: "/dashboard/cyp/banner" },
         { text: "Children & Young People Intro", path: "/dashboard/cyp/intro" },
         { text: "Children & Young People Films", path: "/dashboard/cyp/safeguarding-films" },
+        { text: "Teachers Film Stills", path: "/dashboard/cyp/film-stills" },
       ],
     },
     {
