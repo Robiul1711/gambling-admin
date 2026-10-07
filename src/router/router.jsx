@@ -44,6 +44,9 @@ import OurWorkMembersManager from "@/pages/admin/OurWorkMembersManager";
 import RegistrationManager from "@/pages/admin/RegistrationManager";
 import MemberApprovalsManager from "@/pages/admin/MemberApprovalsManager";
 import BookingManager from "@/pages/admin/BookingManager";
+import EventManager from "@/pages/admin/EventManager";
+import EventRegistrationsManager from "@/pages/admin/EventRegistrationsManager";
+import LibraryResourceManager from "@/pages/admin/LibraryResourceManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -120,6 +123,18 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/members",
         element: <MemberApprovalsManager />,
+      },
+      {
+        path: "/dashboard/events",
+        element: <EventManager />,
+      },
+      {
+        path: "/dashboard/event-registrations",
+        element: <EventRegistrationsManager />,
+      },
+      {
+        path: "/dashboard/members-library",
+        element: <LibraryResourceManager />,
       },
     ],
   },
