@@ -24,6 +24,7 @@ import PublicHealthPositionManager from "@/pages/admin/PublicHealthPositionManag
 import CYPBannerManager from "@/pages/admin/CYPBannerManager";
 import CYPIntroManager from "@/pages/admin/CYPIntroManager";
 import CYPSafeguardingFilmsManager from "@/pages/admin/CYPSafeguardingFilmsManager";
+import TeachersCypFilmStillsManager from "@/pages/admin/TeachersCypFilmStillsManager";
 import GetHelpOverviewManager from "@/pages/admin/GetHelpOverviewManager";
 import GetHelpCheckInManager from "@/pages/admin/GetHelpCheckInManager";
 import GetHelpTreatmentManager from "@/pages/admin/GetHelpTreatmentManager";
@@ -44,6 +45,9 @@ import OurWorkMembersManager from "@/pages/admin/OurWorkMembersManager";
 import RegistrationManager from "@/pages/admin/RegistrationManager";
 import MemberApprovalsManager from "@/pages/admin/MemberApprovalsManager";
 import BookingManager from "@/pages/admin/BookingManager";
+import EventManager from "@/pages/admin/EventManager";
+import EventRegistrationsManager from "@/pages/admin/EventRegistrationsManager";
+import LibraryResourceManager from "@/pages/admin/LibraryResourceManager";
 import { createBrowserRouter } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -82,6 +86,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/cyp/banner", element: <CYPBannerManager /> },
       { path: "/dashboard/cyp/intro", element: <CYPIntroManager /> },
       { path: "/dashboard/cyp/safeguarding-films", element: <CYPSafeguardingFilmsManager /> },
+      { path: "/dashboard/cyp/film-stills", element: <TeachersCypFilmStillsManager /> },
       { path: "/dashboard/get-help/overview", element: <GetHelpOverviewManager /> },
       { path: "/dashboard/get-help/check-in", element: <GetHelpCheckInManager /> },
       { path: "/dashboard/get-help/treatment", element: <GetHelpTreatmentManager /> },
@@ -120,6 +125,18 @@ const router = createBrowserRouter([
       {
         path: "/dashboard/members",
         element: <MemberApprovalsManager />,
+      },
+      {
+        path: "/dashboard/events",
+        element: <EventManager />,
+      },
+      {
+        path: "/dashboard/event-registrations",
+        element: <EventRegistrationsManager />,
+      },
+      {
+        path: "/dashboard/members-library",
+        element: <LibraryResourceManager />,
       },
     ],
   },

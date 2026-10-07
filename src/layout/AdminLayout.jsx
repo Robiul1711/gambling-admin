@@ -16,6 +16,8 @@ import {
   FaUserCheck,
   FaUserShield,
   FaCalendarCheck,
+  FaCalendarAlt,
+  FaClipboardList,
 } from "react-icons/fa";
 import { useUserProfile } from "@/hooks/fetchUserProfile";
 const AdminLayout = () => {
@@ -82,6 +84,7 @@ const AdminLayout = () => {
             { text: "Banner Section", path: "/dashboard/cyp/banner" },
             { text: "Intro Section", path: "/dashboard/cyp/intro" },
             { text: "Safeguarding Films", path: "/dashboard/cyp/safeguarding-films" },
+            { text: "Teachers Film Stills", path: "/dashboard/cyp/film-stills" },
           ],
         },
         {
@@ -124,6 +127,24 @@ const AdminLayout = () => {
           path: "/dashboard/footer",
         },
       ],
+    },
+    {
+      id: "events",
+      icon: <FaCalendarAlt />,
+      text: "Events",
+      path: "/dashboard/events",
+    },
+    {
+      id: "event-registrations",
+      icon: <FaClipboardList />,
+      text: "Event Registrations",
+      path: "/dashboard/event-registrations",
+    },
+    {
+      id: "members-library",
+      icon: <FaBookOpen />,
+      text: "Members Library",
+      path: "/dashboard/members-library",
     },
     {
       id: 6,
