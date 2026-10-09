@@ -1,194 +1,297 @@
-import { useState, useEffect, useRef } from "react";
-import useClient from "@/hooks/useClient";
+import { useState, useEffect } from "react";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
-import { toast } from "react-toastify";
-import { FiSave, FiUpload } from "react-icons/fi";
-import { FaBookOpen, FaImage } from "react-icons/fa";
+import {
+  FiBarChart2,
+  FiCheckCircle,
+  FiPhoneCall,
+  FiUsers,
+  FiRefreshCw,
+  FiBookmark,
+  FiExternalLink,
+  FiShield,
+  FiActivity,
+} from "react-icons/fi";
+import { Link } from "react-router-dom";
 
 export default function GetHelpCheckInManager() {
   const axiosSecure = useAxiosSecure();
-  const imageInputRef = useRef(null);
+  const [analytics, setAnalytics] = useState(null);
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
 
-  const [form, setForm] = useState({
-    title: "",
-    subtitle: "",
-    description: "",
-  });
-  const [imageFile, setImageFile] = useState(null);
-  const [imagePreview, setImagePreview] = useState("");
-  const [saving, setSaving] = useState(false);
-
-  const { data: responseData, refetch } = useClient({
-    queryKey: ["about", "get-help-check-in"],
-    url: "/about/get-help-check-in",
-  });
+  const fetchAnalytics = async () => {
+    setLoadingAnalytics(true);
+    try {
+      const res = await axiosSecure.get("/check-in-analytics/summary");
+      if (res?.data?.success) {
+        setAnalytics(res.data.data);
+      }
+    } catch (e) {
+      console.error("Failed to load check-in analytics:", e);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
 
   useEffect(() => {
-    if (responseData?.data) {
-      const d = responseData.data;
-      setForm({
-        title: d.title || "Welcome. Whichever door you came through.",
-        subtitle: d.subtitle || "Check in",
-        description: d.description || "Most gambling-harm self-assessments online assume you've come to ask for help with your own gambling. We don't make that assumption. You might be checking in for yourself. You might be checking in because of someone else. You might not know yet. All three are valid, and all three start the same way: with a few private questions, in your browser only, and a result that fits whoever you actually are.",
-      });
-      if (d.image) setImagePreview(d.image);
-    }
-  }, [responseData]);
+    fetchAnalytics();
+  }, []);
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    setImageFile(file);
-    setImagePreview(URL.createObjectURL(file));
-  };
+  const totalStarted = analytics?.totalStarted || 0;
+  const totalCompleted = analytics?.totalCompleted || 0;
+  const totalHelplineClicks = analytics?.totalHelplineClicks || 0;
+  const totalSaved = analytics?.totalSaved || 0;
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const formData = new FormData();
-      formData.append("title", form.title);
-      formData.append("subtitle", form.subtitle);
-      formData.append("description", form.description);
-      if (imageFile) formData.append("image", imageFile);
-
-      await axiosSecure.put("/about/get-help-check-in", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      toast.success("Get Help Check-In Banner updated successfully!");
-      setImageFile(null);
-      refetch();
-    } catch (err) {
-      toast.error(err?.response?.data?.message || "Failed to save changes.");
-    } finally {
-      setSaving(false);
-    }
-  };
+  const completionRate =
+    totalStarted > 0 ? Math.round((totalCompleted / totalStarted) * 100) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Page Header */}
-      <div className="bg-gradient-to-r from-[#0F4A63] to-[#156E94] rounded-2xl px-7 py-5 text-white shadow-sm">
-        <h1 className="text-xl font-bold tracking-tight">Check-In Page CMS</h1>
-        <p className="text-white/70 text-sm mt-1">
-          Manage the hero banner details, tagline, description, and cover image for the Check-In page.
-        </p>
-      </div>
-
-      {/* Editor Card */}
-      <div className="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden">
-        <div className="bg-gradient-to-r from-[#156E94] to-[#0D3B4F] text-white px-8 py-6 relative">
-          <div className="absolute top-0 right-0 w-24 h-24 bg-white/5 rounded-full blur-2xl" />
-          <h2 className="text-xl font-bold flex items-center gap-2">
-            <FaBookOpen size={18} />
-            Banner Section Settings
-          </h2>
-          <p className="text-white/70 text-xs mt-0.5">
-            Modify text descriptions and banner image shown on the frontend.
+      <div className="bg-gradient-to-r from-[#0F4A63] to-[#156E94] rounded-2xl px-7 py-6 text-white shadow-sm flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div>
+          <div className="flex items-center gap-2 mb-1.5">
+            <span className="bg-white/20 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full flex items-center gap-1">
+              <FiShield size={11} /> GDPR Compliant • Zero PII
+            </span>
+          </div>
+          <h1 className="text-2xl font-bold tracking-tight">Check-In Tool Analytics</h1>
+          <p className="text-white/80 text-sm mt-1 max-w-xl">
+            Real-time anonymous engagement metrics, completion rates, and helpline interactions from the Check-In instrument.
           </p>
         </div>
 
-        {/* Form Body */}
-        <div className="p-8 space-y-6">
-          {/* Subtitle */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Section Tagline / Subtitle
-            </label>
-            <input
-              type="text"
-              value={form.subtitle}
-              onChange={(e) => setForm((p) => ({ ...p, subtitle: e.target.value }))}
-              placeholder="Check in"
-              className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white"
-            />
-          </div>
+        <div className="flex items-center gap-3">
+          <a
+            href="http://localhost:5173/get-help/check-in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold px-3.5 py-2 rounded-xl transition-colors"
+          >
+            <FiExternalLink size={13} /> View Live Tool
+          </a>
+          <button
+            type="button"
+            onClick={fetchAnalytics}
+            disabled={loadingAnalytics}
+            className="inline-flex items-center gap-1.5 bg-white text-[#0F4A63] hover:bg-white/90 text-xs font-bold px-3.5 py-2 rounded-xl transition-all shadow-xs cursor-pointer"
+          >
+            <FiRefreshCw className={loadingAnalytics ? "animate-spin" : ""} size={13} />
+            Refresh Data
+          </button>
+        </div>
+      </div>
 
-          {/* Title */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Main Heading / Title
-            </label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm((p) => ({ ...p, title: e.target.value }))}
-              placeholder="Welcome. Whichever door you came through."
-              className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white"
-            />
+      {/* Primary KPI Metrics */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Card 1: Total Started */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+          <div className="w-13 h-13 rounded-2xl bg-blue-50 text-[#156E94] flex items-center justify-center shrink-0">
+            <FiUsers size={24} />
           </div>
-
-          {/* Description */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Description Text
-            </label>
-            <textarea
-              value={form.description}
-              onChange={(e) => setForm((p) => ({ ...p, description: e.target.value }))}
-              placeholder="Write description paragraphs here..."
-              rows={5}
-              className="px-4 py-2.5 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 text-slate-700 bg-white resize-y"
-            />
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Check-Ins Started</p>
+            <h3 className="text-3xl font-extrabold text-slate-800 tracking-tight mt-0.5">
+              {totalStarted}
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">Total initiated assessments</p>
           </div>
+        </div>
 
-          {/* Cover Image Upload */}
-          <div className="flex flex-col sm:flex-row items-center gap-5 bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
-            <div className="w-32 h-24 rounded-xl overflow-hidden bg-white border border-slate-200 flex items-center justify-center relative shadow-sm shrink-0">
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Preview"
-                  className="w-full h-full object-cover"
-                />
-              ) : (
-                <FaImage size={24} className="text-slate-300" />
-              )}
+        {/* Card 2: Total Completed */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+          <div className="w-13 h-13 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+            <FiCheckCircle size={24} />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Completed</p>
+            <h3 className="text-3xl font-extrabold text-slate-800 tracking-tight mt-0.5">
+              {totalCompleted}
+            </h3>
+            <p className="text-xs text-emerald-600 font-semibold mt-0.5">
+              {completionRate}% completion rate
+            </p>
+          </div>
+        </div>
+
+        {/* Card 3: Helpline Connections */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+          <div className="w-13 h-13 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+            <FiPhoneCall size={24} />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Helpline Clicks</p>
+            <h3 className="text-3xl font-extrabold text-slate-800 tracking-tight mt-0.5">
+              {totalHelplineClicks}
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">Call & live chat clicks</p>
+          </div>
+        </div>
+
+        {/* Card 4: Copies Saved/Printed */}
+        <div className="bg-white p-6 rounded-2xl border border-slate-200/80 shadow-xs flex items-center gap-4">
+          <div className="w-13 h-13 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0">
+            <FiBookmark size={24} />
+          </div>
+          <div>
+            <p className="text-xs font-bold text-slate-400 uppercase tracking-wider">Saved / Printed</p>
+            <h3 className="text-3xl font-extrabold text-slate-800 tracking-tight mt-0.5">
+              {totalSaved}
+            </h3>
+            <p className="text-xs text-slate-500 mt-0.5">Offline user copies</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Detailed Analytics Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Door Selection Breakdown */}
+        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-sm">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                <FiActivity className="text-[#156E94]" size={18} />
+                Door & Path Selection
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Which door users choose when opening the check-in tool.
+              </p>
             </div>
-            <div className="space-y-2 text-center sm:text-left">
-              <h4 className="text-sm font-bold text-slate-800">Banner Background Image</h4>
-              <div className="flex flex-wrap justify-center sm:justify-start gap-2">
-                <button
-                  type="button"
-                  onClick={() => imageInputRef.current?.click()}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 text-slate-700 text-xs font-semibold rounded-lg hover:bg-slate-50 transition-colors shadow-sm"
-                >
-                  <FiUpload size={10} className="text-[#156E94]" /> Upload Image
-                </button>
-                {imagePreview && (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setImageFile(null);
-                      setImagePreview(responseData?.data?.image || "");
-                      if (imageInputRef.current) imageInputRef.current.value = "";
-                    }}
-                    className="px-3 py-1.5 bg-red-50 text-red-600 text-xs font-semibold rounded-lg hover:bg-red-100 transition-colors"
-                  >
-                    Reset
-                  </button>
-                )}
-                <input
-                  type="file"
-                  ref={imageInputRef}
-                  onChange={handleImageChange}
-                  accept="image/*"
-                  className="hidden"
-                />
+          </div>
+
+          <div className="space-y-3">
+            {analytics?.pathBreakdown && analytics.pathBreakdown.length > 0 ? (
+              analytics.pathBreakdown.map((item) => {
+                const label =
+                  item._id === "self"
+                    ? "My own gambling (GHSI-3)"
+                    : item._id === "ao"
+                    ? "Someone else's gambling (GHSI-AO-7)"
+                    : item._id === "unsure"
+                    ? "I am not sure"
+                    : "Other";
+                const percentage =
+                  totalStarted > 0 ? Math.round((item.count / totalStarted) * 100) : 0;
+
+                return (
+                  <div key={item._id || "unknown"} className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div className="flex justify-between items-center text-xs sm:text-sm font-semibold mb-2">
+                      <span className="text-slate-800">{label}</span>
+                      <span className="text-[#156E94] font-bold">
+                        {item.count} <span className="text-slate-400 font-normal">({percentage}%)</span>
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-[#156E94] rounded-full transition-all duration-300"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-8 text-center text-slate-400 text-xs italic bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                No door selections recorded yet.
               </div>
+            )}
+          </div>
+        </div>
+
+        {/* Helpline Interaction Breakdown */}
+        <div className="bg-white p-6 sm:p-7 rounded-3xl border border-slate-200/80 shadow-sm">
+          <div className="flex items-center justify-between mb-5">
+            <div>
+              <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+                <FiPhoneCall className="text-amber-600" size={18} />
+                Helpline Actions
+              </h3>
+              <p className="text-xs text-slate-500 mt-0.5">
+                Calls initiated vs live chats started from the tool.
+              </p>
             </div>
           </div>
 
-          {/* Save Button */}
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
-            <button
-              onClick={handleSave}
-              disabled={saving}
-              className="flex items-center gap-2 bg-Primary hover:bg-Primary/90 text-white font-semibold text-sm px-6 py-2.5 rounded-xl transition-colors disabled:opacity-60"
-            >
-              <FiSave size={15} />
-              {saving ? "Saving..." : "Save Banner"}
-            </button>
+          <div className="space-y-3">
+            {analytics?.helplineBreakdown && analytics.helplineBreakdown.length > 0 ? (
+              analytics.helplineBreakdown.map((item) => {
+                const label =
+                  item._id === "call"
+                    ? "Phone Calls (0808 8020 133)"
+                    : item._id === "chat"
+                    ? "GamCare Live Chat"
+                    : item._id === "float"
+                    ? "Floating Helpline Button"
+                    : item._id;
+                const percentage =
+                  totalHelplineClicks > 0
+                    ? Math.round((item.count / totalHelplineClicks) * 100)
+                    : 0;
+
+                return (
+                  <div key={item._id || "unknown"} className="bg-slate-50 p-3.5 rounded-xl border border-slate-100">
+                    <div className="flex justify-between items-center text-xs sm:text-sm font-semibold mb-2">
+                      <span className="text-slate-800">{label}</span>
+                      <span className="text-amber-600 font-bold">
+                        {item.count} <span className="text-slate-400 font-normal">({percentage}%)</span>
+                      </span>
+                    </div>
+                    <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-amber-500 rounded-full transition-all duration-300"
+                        style={{ width: `${percentage}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })
+            ) : (
+              <div className="py-8 text-center text-slate-400 text-xs italic bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                No helpline clicks recorded yet.
+              </div>
+            )}
           </div>
+        </div>
+      </div>
+
+      {/* Completed Results Breakdown */}
+      <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-sm">
+        <div className="mb-5">
+          <h3 className="text-base font-bold text-slate-800 flex items-center gap-2">
+            <FiBarChart2 className="text-emerald-600" size={18} />
+            Harm Category Distribution (Anonymous Completed Results)
+          </h3>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Aggregated distribution of result bands without any user identity or personal answers.
+          </p>
+        </div>
+
+        {analytics?.resultsBreakdown && analytics.resultsBreakdown.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            {analytics.resultsBreakdown.map((item, idx) => (
+              <div key={idx} className="bg-slate-50 p-4 rounded-2xl border border-slate-200/60">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#156E94] block mb-1">
+                  {item._id.path === "self" ? "My own (GHSI-3)" : "Someone else (GHSI-AO-7)"}
+                </span>
+                <b className="text-sm font-bold text-slate-800 block">{item._id.resultBand || "General"}</b>
+                <p className="text-xl font-extrabold text-slate-900 mt-2">
+                  {item.count} <span className="text-xs text-slate-500 font-normal">completions</span>
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="py-8 text-center text-slate-400 text-xs italic bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+            No completed assessments recorded yet.
+          </div>
+        )}
+      </div>
+
+      {/* Privacy Notice Banner */}
+      <div className="bg-slate-50 border border-slate-200/80 p-5 rounded-2xl flex items-start gap-3.5 text-xs text-slate-600 leading-relaxed">
+        <FiShield className="text-[#156E94] shrink-0 mt-0.5" size={18} />
+        <div>
+          <strong className="text-slate-800 block mb-0.5">GDPR & Privacy Guarantee:</strong>
+          This telemetry records pure operational counts only. No IP addresses, device identifiers, session cookies, or personal question responses are ever transmitted or saved in the database.
         </div>
       </div>
     </div>
