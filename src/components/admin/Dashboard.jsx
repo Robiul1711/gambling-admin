@@ -102,6 +102,7 @@ const Dashboard = () => {
         { text: "Check-In Banner", path: "/dashboard/get-help/check-in" },
         { text: "Treatment Banner", path: "/dashboard/get-help/treatment" },
         { text: "Family & Friends Banner", path: "/dashboard/get-help/family-friends" },
+        { text: "Thurrock Banner", path: "/dashboard/get-help/thurrock" },
         { text: "What Harm Looks Like", path: "/dashboard/get-help/what-harm" },
         { text: "Victims Not Bystanders", path: "/dashboard/get-help/victims-not-bystanders" },
         { text: "Scale Section settings", path: "/dashboard/get-help/scale-section" },

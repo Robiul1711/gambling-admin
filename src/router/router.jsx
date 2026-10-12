@@ -32,6 +32,7 @@ import GetHelpFamilyFriendsManager from "@/pages/admin/GetHelpFamilyFriendsManag
 import GetHelpWhatHarmManager from "@/pages/admin/GetHelpWhatHarmManager";
 import GetHelpVictimsManager from "@/pages/admin/GetHelpVictimsManager";
 import GetHelpScaleManager from "@/pages/admin/GetHelpScaleManager";
+import ThurrockManager from "@/pages/admin/ThurrockManager";
 import OurWorkBurdenBannerManager from "@/pages/admin/OurWorkBurdenBannerManager";
 import OurWorkModifiableManager from "@/pages/admin/OurWorkModifiableManager";
 import OurWorkExplainedManager from "@/pages/admin/OurWorkExplainedManager";
@@ -91,6 +92,7 @@ const router = createBrowserRouter([
       { path: "/dashboard/get-help/check-in", element: <GetHelpCheckInManager /> },
       { path: "/dashboard/get-help/treatment", element: <GetHelpTreatmentManager /> },
       { path: "/dashboard/get-help/family-friends", element: <GetHelpFamilyFriendsManager /> },
+      { path: "/dashboard/get-help/thurrock", element: <ThurrockManager /> },
       { path: "/dashboard/get-help/what-harm", element: <GetHelpWhatHarmManager /> },
       { path: "/dashboard/get-help/victims-not-bystanders", element: <GetHelpVictimsManager /> },
       { path: "/dashboard/get-help/scale-section", element: <GetHelpScaleManager /> },

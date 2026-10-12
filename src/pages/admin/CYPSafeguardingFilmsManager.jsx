@@ -259,22 +259,22 @@ export default function CYPSafeguardingFilmsManager() {
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <FilmCard
-            sectionId="cyp-safeguarding-film-1"
-            defaultTitle="Mother and Daughter"
-            defaultDesc="This film focuses on how gambling can dominate attention and decision-making, leading to repeated emotional and practical neglect. When gambling becomes a priority, children become unseen."
-            label="Film #1 (Mother and Daughter)"
-          />
-          <FilmCard
-            sectionId="cyp-safeguarding-film-2"
-            defaultTitle="Birthday Card"
-            defaultDesc="This film highlights how children can be harmed through subtle pressure rather than overt force, and how such behaviour can become normalised. Often those who are harmed the most are the people we love the most."
-            label="Film #2 (Birthday Card)"
-          />
-          <FilmCard
             sectionId="cyp-safeguarding-film-3"
             defaultTitle="Brothers"
             defaultDesc="Gambling takes more than money. It can take you away from those who need you most. The film ends before the football cards are given, leaving the younger brother standing alone and disappointed."
-            label="Film #3 (Brothers)"
+            label="Film #1 (Brothers)"
+          />
+          <FilmCard
+            sectionId="cyp-safeguarding-film-1"
+            defaultTitle="Mother and Daughter"
+            defaultDesc="This film focuses on how gambling can dominate attention and decision-making, leading to repeated emotional and practical neglect. When gambling becomes a priority, children become unseen."
+            label="Film #2 (Mother and Daughter)"
+          />
+          <FilmCard
+            sectionId="cyp-safeguarding-film-2"
+            defaultTitle="Father and Daughter"
+            defaultDesc="This film highlights how children can be harmed through subtle pressure rather than overt force, and how such behaviour can become normalised."
+            label="Film #3 (Father and Daughter)"
           />
         </div>
       </div>
