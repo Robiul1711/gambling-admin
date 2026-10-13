@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
+import ReactQuill from "react-quill-new";
+import "react-quill-new/dist/quill.snow.css";
 import {
   FaPlus,
   FaEdit,
@@ -17,6 +19,28 @@ import {
 } from "react-icons/fa";
 import useClient from "@/hooks/useClient";
 import useAxiosSecure from "@/hooks/useAxiosSecure";
+
+const quillModules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline", "strike"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    ["blockquote", "link"],
+    ["clean"],
+  ],
+};
+
+const quillFormats = [
+  "header",
+  "bold",
+  "italic",
+  "underline",
+  "strike",
+  "list",
+  "bullet",
+  "blockquote",
+  "link",
+];
 
 const ResourceManager = () => {
   const queryClient = useQueryClient();
@@ -85,6 +109,10 @@ const ResourceManager = () => {
   const watchedTitle = watch("title");
 
   // Auto-generate slug preview from title if not custom-written
+  useEffect(() => {
+    register("content");
+  }, [register]);
+
   useEffect(() => {
     if (watchedTitle && !editingResource) {
       const autoSlug = watchedTitle
@@ -554,17 +582,54 @@ const ResourceManager = () => {
 
                 {/* Detailed content body */}
                 <div className="flex flex-col gap-1.5 md:col-span-2">
-                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-                    Detailed Content (Article Body)
+                  <label className="text-xs font-bold text-slate-700 uppercase tracking-wider flex items-center justify-between">
+                    <span>Detailed Content (Article Body)</span>
+                    <span className="text-[11px] font-normal text-slate-400 normal-case">
+                      Supports Bold, Italic, Underline, Lists, Headings
+                    </span>
                   </label>
-                  <textarea
-                    {...register("content")}
-                    placeholder="Write the full detailed text content of the article here. Support HTML spacing or paragraphs."
-                    rows={8}
-                    className="px-4 py-3 rounded-xl border border-slate-200 focus:border-[#156E94] outline-none text-sm transition-all duration-200 resize-y"
-                  />
+                  <div className="bg-white rounded-xl border border-slate-200 overflow-hidden focus-within:border-[#156E94] transition-all">
+                    <ReactQuill
+                      theme="snow"
+                      value={watch("content") || ""}
+                      onChange={(content) =>
+                        setValue("content", content, { shouldDirty: true, shouldValidate: true })
+                      }
+                      modules={quillModules}
+                      formats={quillFormats}
+                      placeholder="Write the full detailed text content of the article here. Use the toolbar above to format with bold, italic, underline, headings, lists, etc."
+                      className="article-quill-editor"
+                    />
+                  </div>
                 </div>
               </div>
+
+              {/* Styles for Quill Editor in Modal */}
+              <style>{`
+                .article-quill-editor .ql-toolbar {
+                  border: none !important;
+                  border-bottom: 1px solid #e2e8f0 !important;
+                  background-color: #f8fafc;
+                  padding: 8px 12px;
+                }
+                .article-quill-editor .ql-container {
+                  border: none !important;
+                  min-height: 220px;
+                  max-height: 380px;
+                  overflow-y: auto;
+                  font-size: 14px;
+                  font-family: inherit;
+                }
+                .article-quill-editor .ql-editor {
+                  min-height: 220px;
+                  line-height: 1.6;
+                }
+                .article-quill-editor .ql-editor.ql-blank::before {
+                  font-style: normal;
+                  color: #94a3b8;
+                  font-size: 14px;
+                }
+              `}</style>
 
               {/* Form Actions */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
