@@ -12,9 +12,12 @@ import {
   FiX,
   FiExternalLink,
   FiTag,
+  FiDownload,
+  FiFolder,
+  FiCheck,
 } from "react-icons/fi";
 
-const SECTION_OPTIONS = [
+const DEFAULT_SECTION_OPTIONS = [
   "TOOLKITS & GUIDES",
   "BRIEFINGS & POLICY",
   "RESEARCH & EVIDENCE",
@@ -39,9 +42,11 @@ export default function LibraryResourceManager() {
   const axiosSecure = useAxiosSecure();
 
   const [resources, setResources] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("All");
 
+  // Resource Modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [formData, setFormData] = useState(initialFormState);
@@ -49,12 +54,33 @@ export default function LibraryResourceManager() {
   const [uploading, setUploading] = useState(false);
   const [deletingId, setDeletingId] = useState(null);
 
+  // Category Management & Quick Add
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [isAddingNewCategoryInline, setIsAddingNewCategoryInline] = useState(false);
+  const [newCatData, setNewCatData] = useState({ name: "", title: "", description: "" });
+  const [creatingCategory, setCreatingCategory] = useState(false);
+  const [deletingCatId, setDeletingCatId] = useState(null);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await axiosSecure.get("/library-categories");
+      if (res.data?.success && res.data?.data) {
+        setCategories(res.data.data);
+      }
+    } catch (err) {
+      console.error("Error fetching categories:", err);
+    }
+  };
+
   const fetchResources = async () => {
     setLoading(true);
     try {
-      const res = await axiosSecure.get("/library-resources");
-      if (res.data?.success) {
-        setResources(res.data.data || []);
+      const [resRes] = await Promise.all([
+        axiosSecure.get("/library-resources"),
+        fetchCategories(),
+      ]);
+      if (resRes.data?.success) {
+        setResources(resRes.data.data || []);
       }
     } catch (err) {
       console.error("Error fetching library resources:", err);
@@ -68,12 +94,38 @@ export default function LibraryResourceManager() {
     fetchResources();
   }, []);
 
+  const getResourceDownloadUrl = (item) => {
+    if (!item?.fileUrl) return "";
+    if (item.fileUrl.includes("youtu.be") || item.fileUrl.includes("youtube.com")) {
+      return item.fileUrl;
+    }
+    const apiBase = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+    return `${apiBase}/library-resources/${item._id}/download`;
+  };
+
+  const getResourceViewUrl = (item) => {
+    if (!item?.fileUrl) return "";
+    if (item.fileUrl.includes("youtu.be") || item.fileUrl.includes("youtube.com")) {
+      return item.fileUrl;
+    }
+    const apiBase = (import.meta.env.VITE_API_URL || "").replace(/\/+$/, "");
+    return `${apiBase}/library-resources/${item._id}/download?view=true`;
+  };
+
   const handleOpenAdd = (defaultSection) => {
     setEditingId(null);
+    const initialSection =
+      defaultSection && defaultSection !== "All"
+        ? defaultSection
+        : categories.length > 0
+        ? categories[0].name
+        : "TOOLKITS & GUIDES";
+
     setFormData({
       ...initialFormState,
-      sectionTag: defaultSection && defaultSection !== "All" ? defaultSection : "TOOLKITS & GUIDES",
+      sectionTag: initialSection,
     });
+    setIsAddingNewCategoryInline(false);
     setIsModalOpen(true);
   };
 
@@ -81,7 +133,7 @@ export default function LibraryResourceManager() {
     setEditingId(item._id);
     setFormData({
       title: item.title || "",
-      sectionTag: item.sectionTag || "TOOLKITS & GUIDES",
+      sectionTag: item.sectionTag || (categories.length > 0 ? categories[0].name : "TOOLKITS & GUIDES"),
       fileType: item.fileType || "PDF",
       fileUrl: item.fileUrl || "",
       fileSize: item.fileSize || "",
@@ -89,6 +141,7 @@ export default function LibraryResourceManager() {
       isMembersOnly: item.isMembersOnly ?? true,
       order: item.order || 0,
     });
+    setIsAddingNewCategoryInline(false);
     setIsModalOpen(true);
   };
 
@@ -105,6 +158,65 @@ export default function LibraryResourceManager() {
       toast.error(err?.response?.data?.message || "Failed to delete resource.");
     } finally {
       setDeletingId(null);
+    }
+  };
+
+  const handleCreateCategory = async (catDataToSave) => {
+    const name = catDataToSave.name?.trim();
+    if (!name) {
+      toast.error("Category name is required.");
+      return null;
+    }
+    setCreatingCategory(true);
+    try {
+      const res = await axiosSecure.post("/library-categories", {
+        name: name.toUpperCase(),
+        title: catDataToSave.title?.trim() || name,
+        description: catDataToSave.description?.trim() || "",
+      });
+      if (res.data?.success) {
+        toast.success("Category saved successfully.");
+        await fetchCategories();
+        return res.data.data;
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to add category.");
+    } finally {
+      setCreatingCategory(false);
+    }
+    return null;
+  };
+
+  const handleQuickAddCategory = async (e) => {
+    e.preventDefault();
+    const created = await handleCreateCategory(newCatData);
+    if (created) {
+      setFormData((prev) => ({ ...prev, sectionTag: created.name }));
+      setNewCatData({ name: "", title: "", description: "" });
+      setIsAddingNewCategoryInline(false);
+    }
+  };
+
+  const handleDeleteCategory = async (id, name) => {
+    if (
+      !window.confirm(
+        `Are you sure you want to delete the category "${name}"? Any resources in this category will be reassigned to "OTHER".`
+      )
+    )
+      return;
+
+    setDeletingCatId(id);
+    try {
+      const res = await axiosSecure.delete(`/library-categories/${id}`);
+      if (res.data?.success) {
+        toast.success(res.data.message || "Category deleted successfully.");
+        await fetchCategories();
+        await fetchResources();
+      }
+    } catch (err) {
+      toast.error(err?.response?.data?.message || "Failed to delete category.");
+    } finally {
+      setDeletingCatId(null);
     }
   };
 
@@ -175,13 +287,18 @@ export default function LibraryResourceManager() {
     }
   };
 
+  const categoryNames =
+    categories.length > 0
+      ? categories.map((c) => c.name)
+      : DEFAULT_SECTION_OPTIONS;
+
   const filteredResources = resources.filter((r) => {
     if (activeTab === "All") return true;
     return r.sectionTag === activeTab;
   });
 
   return (
-    <div className=" space-y-6">
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -190,17 +307,24 @@ export default function LibraryResourceManager() {
             Members Library Management
           </h1>
           <p className="text-sm text-gray-500 mt-1">
-            Upload and organize toolkits, policy briefings, research data and training slide decks.
+            Upload and organize toolkits, policy briefings, research data, custom categories and slide decks.
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 flex-wrap">
           <button
             onClick={fetchResources}
             className="p-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg transition-colors"
             title="Refresh"
           >
             <FiRefreshCw className={loading ? "animate-spin" : ""} />
+          </button>
+          <button
+            onClick={() => setIsCategoryModalOpen(true)}
+            className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2.5 rounded-lg text-sm font-semibold transition-colors"
+          >
+            <FiFolder size={17} />
+            Manage Categories
           </button>
           <button
             onClick={() => handleOpenAdd(activeTab)}
@@ -214,7 +338,7 @@ export default function LibraryResourceManager() {
 
       {/* Tabs */}
       <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 pb-3">
-        {["All", ...SECTION_OPTIONS].map((tab) => (
+        {["All", ...categoryNames].map((tab) => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
@@ -271,15 +395,28 @@ export default function LibraryResourceManager() {
                 )}
 
                 {item.fileUrl && (
-                  <a
-                    href={item.fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1 text-xs font-semibold text-[#156E94] hover:underline mt-3"
-                  >
-                    <FiExternalLink size={12} />
-                    View / Download File
-                  </a>
+                  <div className="flex items-center gap-2 mt-3 flex-wrap">
+                    <a
+                      href={getResourceViewUrl(item)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-[#156E94] hover:underline"
+                    >
+                      <FiExternalLink size={12} />
+                      View File
+                    </a>
+                    <span className="text-gray-300">•</span>
+                    <a
+                      href={getResourceDownloadUrl(item)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      download
+                      className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-0.5 rounded transition-colors"
+                    >
+                      <FiDownload size={11} />
+                      Download
+                    </a>
+                  </div>
                 )}
               </div>
 
@@ -310,7 +447,7 @@ export default function LibraryResourceManager() {
         </div>
       )}
 
-      {/* Modal */}
+      {/* Add / Edit Resource Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 p-6 sm:p-8">
@@ -328,21 +465,88 @@ export default function LibraryResourceManager() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-sm">
-              <div>
-                <label className="block text-xs font-semibold text-gray-700 mb-1">
-                  Section Category *
-                </label>
-                <select
-                  value={formData.sectionTag}
-                  onChange={(e) => setFormData({ ...formData, sectionTag: e.target.value })}
-                  className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white"
-                >
-                  {SECTION_OPTIONS.map((sec) => (
-                    <option key={sec} value={sec}>
-                      {sec}
-                    </option>
-                  ))}
-                </select>
+              {/* Category Selection or Inline Add */}
+              <div className="space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="block text-xs font-semibold text-gray-700">
+                    Section Category *
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => setIsAddingNewCategoryInline((prev) => !prev)}
+                    className="text-xs font-semibold text-[#156E94] hover:underline flex items-center gap-1"
+                  >
+                    <FiPlus size={13} />
+                    {isAddingNewCategoryInline ? "Choose Existing Category" : "+ Add New Category"}
+                  </button>
+                </div>
+
+                {!isAddingNewCategoryInline ? (
+                  <select
+                    value={formData.sectionTag}
+                    onChange={(e) => {
+                      if (e.target.value === "__CREATE_NEW__") {
+                        setIsAddingNewCategoryInline(true);
+                      } else {
+                        setFormData({ ...formData, sectionTag: e.target.value });
+                      }
+                    }}
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg bg-white"
+                  >
+                    {categoryNames.map((sec) => (
+                      <option key={sec} value={sec}>
+                        {sec}
+                      </option>
+                    ))}
+                    <option value="__CREATE_NEW__">+ Create a new category...</option>
+                  </select>
+                ) : (
+                  <div className="p-3.5 bg-sky-50/70 border border-sky-200 rounded-xl space-y-2">
+                    <p className="text-xs font-bold text-sky-900 flex items-center gap-1">
+                      <FiTag className="text-[#156E94]" />
+                      Add Custom Category
+                    </p>
+                    <input
+                      type="text"
+                      value={newCatData.name}
+                      onChange={(e) => setNewCatData({ ...newCatData, name: e.target.value })}
+                      placeholder="Category Tag/Name (e.g. POLICY & REFORMS) *"
+                      className="w-full px-3 py-1.5 text-xs border border-sky-300 rounded bg-white"
+                    />
+                    <input
+                      type="text"
+                      value={newCatData.title}
+                      onChange={(e) => setNewCatData({ ...newCatData, title: e.target.value })}
+                      placeholder="Website Display Title (e.g. Policy Briefings & Reforms)"
+                      className="w-full px-3 py-1.5 text-xs border border-sky-300 rounded bg-white"
+                    />
+                    <input
+                      type="text"
+                      value={newCatData.description}
+                      onChange={(e) => setNewCatData({ ...newCatData, description: e.target.value })}
+                      placeholder="Short Description for users (optional)"
+                      className="w-full px-3 py-1.5 text-xs border border-sky-300 rounded bg-white"
+                    />
+                    <div className="flex items-center gap-2 pt-1">
+                      <button
+                        type="button"
+                        disabled={creatingCategory || !newCatData.name.trim()}
+                        onClick={handleQuickAddCategory}
+                        className="px-3 py-1 bg-[#156E94] text-white text-xs font-semibold rounded hover:bg-[#0E5270] transition-colors disabled:opacity-50 flex items-center gap-1"
+                      >
+                        <FiCheck size={12} />
+                        {creatingCategory ? "Saving..." : "Save & Select"}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setIsAddingNewCategoryInline(false)}
+                        className="px-2.5 py-1 text-xs text-slate-600 hover:text-slate-800"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               <div>
@@ -461,6 +665,123 @@ export default function LibraryResourceManager() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Standalone Category Management Modal */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl border border-gray-200 p-6 sm:p-8">
+            <div className="flex items-center justify-between pb-4 border-b border-gray-100 mb-5">
+              <h3 className="text-lg font-bold text-gray-900 flex items-center gap-2">
+                <FiFolder className="text-[#156E94]" />
+                Manage Library Categories
+              </h3>
+              <button
+                onClick={() => setIsCategoryModalOpen(false)}
+                className="p-1.5 text-gray-400 hover:text-gray-600 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <FiX size={20} />
+              </button>
+            </div>
+
+            {/* Quick Add Form */}
+            <div className="bg-gray-50 p-4 rounded-xl border border-gray-200 mb-6 space-y-3">
+              <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider flex items-center gap-1">
+                <FiPlus className="text-[#156E94]" /> Add New Category
+              </h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <input
+                  type="text"
+                  value={newCatData.name}
+                  onChange={(e) => setNewCatData({ ...newCatData, name: e.target.value })}
+                  placeholder="Category Name (e.g. WORKPLACE GUIDES) *"
+                  className="px-3 py-2 text-xs border border-gray-300 rounded-lg bg-white"
+                />
+                <input
+                  type="text"
+                  value={newCatData.title}
+                  onChange={(e) => setNewCatData({ ...newCatData, title: e.target.value })}
+                  placeholder="Website Section Title (optional)"
+                  className="px-3 py-2 text-xs border border-gray-300 rounded-lg bg-white"
+                />
+              </div>
+              <input
+                type="text"
+                value={newCatData.description}
+                onChange={(e) => setNewCatData({ ...newCatData, description: e.target.value })}
+                placeholder="Section Description for website (optional)"
+                className="w-full px-3 py-2 text-xs border border-gray-300 rounded-lg bg-white"
+              />
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  disabled={creatingCategory || !newCatData.name.trim()}
+                  onClick={async () => {
+                    const created = await handleCreateCategory(newCatData);
+                    if (created) {
+                      setNewCatData({ name: "", title: "", description: "" });
+                    }
+                  }}
+                  className="px-4 py-2 bg-[#156E94] hover:bg-[#0E5270] text-white text-xs font-semibold rounded-lg transition-colors disabled:opacity-50"
+                >
+                  {creatingCategory ? "Adding..." : "+ Add Category"}
+                </button>
+              </div>
+            </div>
+
+            {/* Existing Categories List */}
+            <div>
+              <h4 className="text-xs font-bold text-gray-700 uppercase tracking-wider mb-3">
+                Existing Categories ({categories.length})
+              </h4>
+              <div className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+                {categories.map((cat) => (
+                  <div
+                    key={cat._id}
+                    className="p-3.5 bg-white hover:bg-gray-50 flex items-center justify-between gap-4 transition-colors"
+                  >
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="font-bold text-xs text-gray-900 px-2 py-0.5 rounded bg-sky-50 text-sky-800 border border-sky-100 uppercase tracking-wide">
+                          {cat.name}
+                        </span>
+                        {cat.title && cat.title !== cat.name && (
+                          <span className="text-xs font-medium text-gray-600">
+                            ({cat.title})
+                          </span>
+                        )}
+                      </div>
+                      {cat.description && (
+                        <p className="text-xs text-gray-400 mt-1 line-clamp-1">
+                          {cat.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={() => handleDeleteCategory(cat._id, cat.name)}
+                      disabled={deletingCatId === cat._id}
+                      className="p-1.5 text-rose-500 hover:text-rose-700 hover:bg-rose-50 rounded transition-colors disabled:opacity-50"
+                      title="Delete Category"
+                    >
+                      <FiTrash2 size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex justify-end pt-5 border-t border-gray-100 mt-6">
+              <button
+                type="button"
+                onClick={() => setIsCategoryModalOpen(false)}
+                className="px-5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded-lg transition-colors"
+              >
+                Done
+              </button>
+            </div>
           </div>
         </div>
       )}
